@@ -10,4 +10,4 @@ spring:
 
 
 service:
-  provider-one: service-provider-one
+  provider-one: service-provider-two
