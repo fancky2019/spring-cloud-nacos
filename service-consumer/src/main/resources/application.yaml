@@ -1,0 +1,13 @@
+server:
+  port: 8210
+spring:
+  application:
+    name: service-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+
+service:
+  provider-one: service-provider-one
