@@ -3,9 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		   <groupId>com.fancky</groupId>
-			<artifactId>spring-cloud-nacos</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.4.2</version>
+<!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
 
     <!--1、	设置pom-->
@@ -54,6 +55,7 @@
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 			<version>3.0.5</version>
 		</dependency>
+
         <!--  openfeign 依赖loadbalancer-->
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-loadbalancer -->
         <dependency>
