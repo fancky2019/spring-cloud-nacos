@@ -11,7 +11,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 
-@RefreshScope
+@RefreshScope   //@RefreshScope 配置自动更新
 @RestController
 @RequestMapping("/test")
 public class TestController {
