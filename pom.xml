@@ -18,6 +18,13 @@
 	<name>spring-cloud-nacos</name>
 	<description>Demo project for Spring Boot</description>
 
+	<!-- 2、设置子module-->
+	<modules>
+		<module>service-consumer</module>
+		<module>service-provider-one</module>
+		<module>service-provider-two</module>
+	</modules>
+
 	<properties>
 		<java.version>1.8</java.version>
 		<nacos.config.version>2021.1</nacos.config.version>
@@ -63,6 +70,15 @@
 			<artifactId>spring-cloud-loadbalancer</artifactId>
 			<version>3.0.4</version>
 		</dependency>
+
+<!--		pringcloud高版本默认不加载bootstrap.yml文件，-->
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+			<version>3.0.4</version>
+		</dependency>
+
 
 	</dependencies>
 

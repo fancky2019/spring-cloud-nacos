@@ -2,12 +2,16 @@ package com.example.serviceconsumer.controller;
 
 import com.example.serviceconsumer.service.TestOpenFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+
+@RefreshScope
 @RestController
 @RequestMapping("/test")
 public class TestController {
@@ -15,7 +19,7 @@ public class TestController {
 //    private final RestTemplate restTemplate;
 
     @Autowired
-    private  TestOpenFeignService testOpenFeignService;
+    private TestOpenFeignService testOpenFeignService;
 
 //    @Autowired
 //    public TestController(RestTemplate restTemplate, TestOpenFeignService testOpenFeignService) {
@@ -24,6 +28,8 @@ public class TestController {
 //        this.testOpenFeignService = testOpenFeignService;
 //    }
 
+    @Value("${config.appName}")
+    private String appName;
 
     @GetMapping("/helloWorld")
     public String helloWorld(String hello) {
@@ -40,5 +46,20 @@ public class TestController {
 
     }
 
+
+    @GetMapping("/configTest")
+    public String configTest(String hello) {
+
+        String jsonStr = testOpenFeignService.helloWorld("test");
+        int m = 0;
+        return appName + ":" + jsonStr;
+//        try {
+//            return restTemplate.getForObject("http://service-provider-one/test/helloWorld?hello=" + hello, String.class);
+//        } catch (RestClientException e) {
+//            e.printStackTrace();
+//            return "";
+//        }
+
+    }
 
 }
