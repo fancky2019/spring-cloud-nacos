@@ -20,6 +20,7 @@
 
 	<!-- 2、设置子module-->
 	<modules>
+		<module>gateway</module>
 		<module>service-consumer</module>
 		<module>service-provider-one</module>
 		<module>service-provider-two</module>
@@ -28,6 +29,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<nacos.config.version>2021.1</nacos.config.version>
+		<spring-cloud.version>2020.0.3</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -60,7 +62,7 @@
         <dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
-			<version>3.0.5</version>
+<!--			<version>3.0.5</version>-->
 		</dependency>
 
         <!--  openfeign 依赖loadbalancer-->
@@ -68,7 +70,7 @@
         <dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-loadbalancer</artifactId>
-			<version>3.0.4</version>
+<!--			<version>3.0.4</version>-->
 		</dependency>
 
 <!--		pringcloud高版本默认不加载bootstrap.yml文件，-->
@@ -76,18 +78,29 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
-			<version>3.0.4</version>
 		</dependency>
 
-
 	</dependencies>
+
+	<!--    整理非org.springframework.boot的版本依赖-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.5.4</version>
+<!--				<version>2.5.4</version>-->
 			</plugin>
 		</plugins>
 	</build>
