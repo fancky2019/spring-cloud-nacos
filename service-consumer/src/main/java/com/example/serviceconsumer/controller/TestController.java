@@ -34,6 +34,7 @@ public class TestController {
     @GetMapping("/helloWorld")
     public String helloWorld(String hello) {
 
+
         String jsonStr = testOpenFeignService.helloWorld("test");
         int m = 0;
         return jsonStr;
@@ -52,6 +53,12 @@ public class TestController {
 
         String jsonStr = testOpenFeignService.helloWorld("test");
         int m = 0;
+        try {
+            //设置超时熔断
+            Thread.sleep(10*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return appName + ":" + jsonStr;
 //        try {
 //            return restTemplate.getForObject("http://service-provider-one/test/helloWorld?hello=" + hello, String.class);

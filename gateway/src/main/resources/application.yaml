@@ -1,0 +1,140 @@
+#指定本服务的端口号，默认8080
+server:
+  port: 8201
+spring:
+  application:
+    name: nacos-springgateway
+
+  redis:
+    #  数据库索引
+    database: 3
+    # 远程服务器地址
+    host: 127.0.0.1
+    # 远程服务器端口
+    port: 6379
+    # 验证码
+    password: fancky123456
+    # 链接超时时间（毫秒）
+    jedis:
+      pool:
+        # 最大空闲连接
+        max-idle: 8
+        # 最小空闲链接
+        min-idle: 0
+        # 最大连接数（负数表示没有限制）
+        max-active: 8
+        # 最大阻塞等待时间（负数表示没有限制）
+        max-wait: 0
+    # 链接超时时间（毫秒）
+    timeout: 50
+
+
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+    gateway:
+      # default-filters:
+      discovery: #是否与服务发现组件进行结合，通过 serviceId(必须设置成大写) 转发到具体的服务实例。默认为false，设为true便开启通过服务中心的自动根据 serviceId 创建路由的功能。
+        locator: #路由访问方式：http://Gateway_HOST:Gateway_PORT/大写的serviceId/**，其中微服务应用名默认大写访问。
+          #http://localhost:8080/gateway/user?name=a
+          enabled: true #开启从注册中心动态创建路由的功能，利用微服务名进行路由
+          # 将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了）如：server-->注册中心SERVER
+          lowerCaseServiceId: true
+      routes:
+#        - id: 163
+#          uri: http://www.163.com/
+#          predicates:
+#            # 转发该路径
+#            - Path=/usera/**
+#          # 带前缀
+#          filters:
+#            - StripPrefix=1
+#        #id 必须大写，名称随便REGISTERCENTER
+        - id: registercenter
+          # 是否会经过负载均衡，是通过判断uri的schema的，如果是以lb开头，则会开启负载均衡
+          # lb代表会经过负载均衡，从注册中心获取服务，SERVER:为注册中心的服务名称
+          #会用自带的负载均衡：http://localhost:8080/gateway1/user?name=a
+          # 客户端负载均衡实现：两个微服务注册到注册中心的名称一样，ip和端口不一样
+          uri: lb://service-consumer
+          predicates:
+            #路径要对应，区分大小写
+            - Path=/gateway/**
+          filters:
+            #从/gateway/**开始转发跳过的目录数，StripPrefix=1跳过/gateway/
+            - StripPrefix=1
+            # RedisRateLimter RequestRateLimiter
+            - name: RequestRateLimiter
+              args:
+                # 先启动Redis不停刷新连接  报错：HTTP ERROR 429（too many request），证明成功
+                # 允许用户每秒处理多少个请求 10
+                redis-rate-limiter.replenishRate: 1
+                # 令牌桶的容量，允许在一秒钟内完成的最大请求数 20
+                redis-rate-limiter.burstCapacity: 2
+                # 使用spell按名称引用bean，在配置文件中定义的名称
+                key-resolver: "#{@ipKeyResolver}"
+            #熔断过滤器,如果timeoutInMilliseconds配置的时间内没有回复，则会重定向到fallbackUri
+            - name: CircuitBreaker
+              args:
+                name: myCircuitBreaker
+                fallbackUri: forward:/servercallback/defaultfallback
+
+#        - id: SPRINGBOOTPROJECT
+#          # lb代表从注册中心获取服务，SERVER:为注册中心的服务名称
+#          #会用自带的负载均衡
+#          uri: lb://SPRINGBOOTPROJECT
+#          predicates:
+#            #路径要对应，区分大小写
+#            # 前端先访问网关，网关路由转发请求后端的微服务。
+#            # 访问网关URL: url: "http://localhost:8080/gateway/springBootProject/jwt/authorise",//url填写的是请求的路径
+#            #微服务URL:http://localhost:8080/jwt/authorise。此处配置StripPrefix=2 跳过/gateway/springBootProject
+#            - Path=/gateway/springBootProject/**
+#          filters:
+#            #从/gateway/springBootProject/**开始转发跳过的目录数，StripPrefix=2跳过两层目录：/gateway/springBootProject/
+#            # 如：http://localhost:8080/gateway/springBootProject/feignclient/testParam?name=fanckyTest1
+#            #StripPrefix=2  跳过2层目录之后之后变成http://localhost:8080/feignclient/testParam?name=fanckyTest1
+#            #直接访问http://localhost:8080/feignclient/testParam?name=fanckyTest1
+#            - StripPrefix=2
+#            # RedisRateLimter RequestRateLimiter
+#            - name: RequestRateLimiter
+#              args:
+#                # 先启动Redis不停刷新连接  报错：HTTP ERROR 429（too many request），证明成功
+#                # 允许用户每秒处理多少个请求 5
+#                redis-rate-limiter.replenishRate: 5
+#                # 令牌桶的容量，允许在一秒钟内完成的最大请求数 10
+#                redis-rate-limiter.burstCapacity: 10
+#                # 使用SpEL按名称引用bean，在配置文件中定义的名称
+#                key-resolver: "#{@ipKeyResolver}"
+#            #熔断过滤器,如果timeoutInMilliseconds配置的时间内没有回复，则会重定向到fallbackUri
+#            - name: Hystrix
+#              args:
+#                name: fallbackcmd
+#                fallbackUri: forward:/servercallback/springbootproject
+hystrix:
+  command:
+    default: #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000 #断路器超时时间，默认1000ms
+
+
+
+
+#注意：服务中心和提供的服务都要启动
+#打开链接测试，不停刷新会发现负载均衡
+#http://localhost:8080/gateway1/user?name=a
+
+
+
+
+
+
+
+demo:
+  JWTSecretKey: GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk
