@@ -28,6 +28,7 @@ public class TestController {
 //        this.testOpenFeignService = testOpenFeignService;
 //    }
 
+    //在nacos中修改配置，发布。再次调用发现配置更新。
     @Value("${config.appName}")
     private String appName;
 
@@ -35,7 +36,7 @@ public class TestController {
     public String helloWorld(String hello) {
 
 
-        String jsonStr = testOpenFeignService.helloWorld("test");
+        String jsonStr =appName +":"+ testOpenFeignService.helloWorld("test");
         int m = 0;
         return jsonStr;
 //        try {
@@ -51,7 +52,7 @@ public class TestController {
     @GetMapping("/configTest")
     public String configTest(String hello) {
 
-        String jsonStr = testOpenFeignService.helloWorld("test");
+        String jsonStr =appName +":"+ testOpenFeignService.helloWorld("test");
         int m = 0;
         try {
             //设置超时熔断
