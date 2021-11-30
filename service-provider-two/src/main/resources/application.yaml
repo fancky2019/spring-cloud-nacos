@@ -1,9 +1,17 @@
-server:
-  port: 8212
-spring:
-  application:
-    name: service-provider-two
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
+#server:
+#  port: 8212
+#spring:
+#  application:
+#    name: service-provider-two
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
+##        metadata:  #以下是springbootadmin的配置
+##          management:
+##            context-path: '${server.servlet.context-path}/actuator'
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'

@@ -31,13 +31,11 @@
 			<scope>test</scope>
 		</dependency>
 
-
-<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.cloud</groupId>-->
-<!--			<artifactId>spring-cloud-starter-openfeign</artifactId>-->
-<!--			&lt;!&ndash;			<version>3.0.5</version>&ndash;&gt;-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+			<version>${spring-boot-admin.version}</version>
+		</dependency>
 	</dependencies>
 
 <!--	<build>-->
