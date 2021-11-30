@@ -3,33 +3,64 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-        <groupId>com.fancky</groupId>
+		<groupId>com.fancky</groupId>
 		<artifactId>spring-cloud-nacos</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 	<groupId>com.example</groupId>
 	<artifactId>gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gateway</name>
 	<description>Demo project for Spring Boot</description>
+
 	<properties>
 
 	</properties>
+
 	<dependencies>
-     <!--  网关-->
+
+<!--       网关-->
 		<dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
-	</dependencies>
 
-<!--	<build>-->
-<!--		<plugins>-->
-<!--			<plugin>-->
-<!--				<groupId>org.springframework.boot</groupId>-->
-<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--			</plugin>-->
-<!--		</plugins>-->
-<!--	</build>-->
+         <!--熔断；hystrix将会被resilience4j替代且将被移除。hystrix 无法下载依赖-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+<!--		     <exclusions>-->
+<!--				<exclusion>-->
+<!--					<groupId>org.junit.jupiter</groupId>-->
+<!--					<artifactId>junit-jupiter-api</artifactId>-->
+<!--				</exclusion>-->
+<!--			  </exclusions>-->
+
+		</dependency>
+
+<!--		&lt;!&ndash;  熔断&ndash;&gt;-->
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-hystrix &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>-->
+<!--		</dependency>-->
+
+		<!--  Redis 限流：别忘记启动Redis-->
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis-reactive -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+		</dependency>
+
+		<!-- 登录、鉴权-->
+		<!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
+		<dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
+	</dependencies>
 
 </project>
