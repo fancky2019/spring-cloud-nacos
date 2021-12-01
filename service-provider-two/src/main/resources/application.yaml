@@ -2,7 +2,7 @@
 #  port: 8212
 #spring:
 #  application:
-#    name: service-provider-two
+#    name: service-provider-two  #nacos将服务服务注册中心，默认采用应用程序名称。如果两个服务名称一样，网关会采用负载均衡。默认轮训
 #  cloud:
 #    nacos:
 #      discovery:
