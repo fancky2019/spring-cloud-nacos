@@ -10,3 +10,27 @@
 ##        server-addr: 127.0.0.1:8848
 #      discovery:
 #        server-addr: 127.0.0.1:8848
+#  boot:
+#    admin:
+#      notify:
+#        mail:
+#          enabled: true
+#          from: 1513918351@qq.com
+#          to: 709737588@qq.com,1145503531@qq.com
+#    # 邮件发送者信息
+#  mail:
+#    # 协议 默认就是smtp  。465 smtps；587 smtp
+#    protocol: smtp
+#    host: smtp.qq.com
+#    username: 1513918351@qq.com
+#    default-encoding: utf-8
+#    password: ifxoxskborkojeea
+#    # smtp的指定端口 使用465要将protocol改为smtps
+#    port: 587
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#            required: true

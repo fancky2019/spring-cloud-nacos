@@ -44,15 +44,6 @@
 #          # 将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了）如：server-->注册中心SERVER
 #          lowerCaseServiceId: true
 #      routes:
-##        - id: 163
-##          uri: http://www.163.com/
-##          predicates:
-##            # 转发该路径
-##            - Path=/usera/**
-##          # 带前缀
-##          filters:
-##            - StripPrefix=1
-##        #id 必须大写，名称随便REGISTERCENTER
 #        - id: registercenter
 #          # 是否会经过负载均衡，是通过判断uri的schema的，如果是以lb开头，则会开启负载均衡
 #          # lb代表会经过负载均衡，从注册中心获取服务，SERVER:为注册中心的服务名称
@@ -112,38 +103,17 @@
 ##              args:
 ##                name: fallbackcmd
 ##                fallbackUri: forward:/servercallback/springbootproject
-#hystrix:
-#  command:
-#    default: #default全局有效，service id指定应用有效
-#      execution:
-#        timeout:
-#          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
-#          enabled: true
-#        isolation:
-#          thread:
-#            timeoutInMilliseconds: 1000 #断路器超时时间，默认1000ms
-#
-#
-#
-#
-##注意：服务中心和提供的服务都要启动
-##打开链接测试，不停刷新会发现负载均衡
-##http://localhost:8080/gateway1/user?name=a
-#
-#
-#
-#
-#
-#
-#
-#demo:
-#  JWTSecretKey: GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk
-#
-#
-#
 #
 #management:
 #  endpoints:
 #    web:
 #      exposure:
 #        include: '*'
+#
+##注意：服务中心和提供的服务都要启动
+##打开链接测试，不停刷新会发现负载均衡
+##http://localhost:8080/gateway1/user?name=a
+#
+#demo:
+#  JWTSecretKey: GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk
+#
