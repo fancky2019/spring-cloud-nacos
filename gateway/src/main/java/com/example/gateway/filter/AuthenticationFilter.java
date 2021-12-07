@@ -4,6 +4,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.gateway.utility.JWTUtility;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -23,7 +25,7 @@ import java.util.Date;
 //@Component
 public class AuthenticationFilter implements GlobalFilter, Ordered {
 
-
+    private static Logger logger = LogManager.getLogger(AuthenticationFilter.class);
     @Autowired
     private JWTUtility jwtUtility;
 
@@ -40,7 +42,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         //http://localhost:8080/gateway1/user?name=a
         String uri = request.getURI().toString();
-
+        logger.info("接收请求:"+uri);
         //包含网关的前缀：/gateway1/user
         String path = exchange.getRequest().getURI().getPath();
         int index = path.indexOf('/', 1);

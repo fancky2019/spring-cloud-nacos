@@ -1,12 +1,13 @@
 package com.example.serviceconsumer.controller;
 
+import com.example.serviceconsumer.model.Student;
 import com.example.serviceconsumer.service.TestOpenFeignService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @RequestMapping("/test")
 public class TestController {
+
+    private static Logger logger = LogManager.getLogger(TestController.class);
 
 //    private final RestTemplate restTemplate;
 
@@ -35,7 +38,7 @@ public class TestController {
     @GetMapping("/helloWorld")
     public String helloWorld(String hello) {
 
-
+        logger.info("hello="+hello);
         String jsonStr =appName +":"+ testOpenFeignService.helloWorld("test");
         int m = 0;
         return jsonStr;
@@ -68,6 +71,13 @@ public class TestController {
 //            return "";
 //        }
 
+    }
+
+    @PostMapping("/add")
+    public Student add(@RequestBody Student student)
+    {
+        Student newStudent=  testOpenFeignService.add(student);
+        return newStudent;
     }
 
 }

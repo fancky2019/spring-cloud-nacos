@@ -37,6 +37,55 @@
 			<version>${spring-boot-admin.version}</version>
 		</dependency>
 
+
+
+
+
+
+<!--		&lt;!&ndash;        log4j2配置&ndash;&gt;-->
+<!--		<dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter</artifactId>-->
+
+<!--            <exclusions>&lt;!&ndash;log4j2 加上下面去掉默认配置 &ndash;&gt;-->
+<!--				<exclusion>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-starter-logging</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+
+<!--		&lt;!&ndash;添加log4j2依赖&ndash;&gt;-->
+<!--		<dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-log4j2</artifactId>-->
+<!--        </dependency>-->
+<!--		&lt;!&ndash;        如果log4j2配置文件是yml要加此配置，如果是xml配置不用加&ndash;&gt;-->
+<!--		<dependency>-->
+<!--            <groupId>com.fasterxml.jackson.dataformat</groupId>-->
+<!--            <artifactId>jackson-dataformat-yaml</artifactId>-->
+<!--        </dependency>-->
+<!--		&lt;!&ndash;          log4j2异步写日志需要用&ndash;&gt;-->
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/com.lmax/disruptor &ndash;&gt;-->
+<!--		<dependency>-->
+<!--            <groupId>com.lmax</groupId>-->
+<!--            <artifactId>disruptor</artifactId>-->
+<!--            <version>3.4.2</version>-->
+<!--        </dependency>-->
+<!--		&lt;!&ndash;        log4j2邮件&ndash;&gt;-->
+<!--		<dependency>-->
+<!--            <groupId>javax.activation</groupId>-->
+<!--            <artifactId>activation</artifactId>-->
+<!--            <version>1.1.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.sun.mail</groupId>-->
+<!--            <artifactId>javax.mail</artifactId>-->
+<!--            <version>1.5.4</version>-->
+<!--        </dependency>-->
+
+
+
 	</dependencies>
 
 
