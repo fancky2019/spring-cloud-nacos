@@ -17,7 +17,7 @@ public class RequestRateLimiterByRedisConfig {
     @Bean(value = "ipKeyResolver")
     public KeyResolver ipKeyResolver() {
         //获取访问者的ip地址, 通过访问者ip地址进行限流, 限流使用的是Redis中的令牌桶算法
-        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getAddress().getHostAddress());
+        return exchange -> reactor.core.publisher.Mono.just(exchange.getRequest().getRemoteAddress().getAddress().getHostAddress());
     }
 
 //    /*

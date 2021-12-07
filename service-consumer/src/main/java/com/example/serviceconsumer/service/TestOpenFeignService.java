@@ -1,9 +1,10 @@
 package com.example.serviceconsumer.service;
 
+import com.example.serviceconsumer.model.Student;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /*
     参见SpringCloud 项目
@@ -18,6 +19,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "${service.provider-one}")//开启回调
 public interface TestOpenFeignService {
 
-    @RequestMapping(value = "/test/helloWorld")
+    @GetMapping(value = "/test/helloWorld")
     String helloWorld(@RequestParam String hello);
+
+    @PostMapping("/test/add")
+    Student add(@RequestBody Student student);
+
+
+//    @PostMapping("/test/addUser1")
+//    String addUser1(@RequestBody @Validated UserInfo request, @RequestHeader("token") String token);
+
+
+
 }
