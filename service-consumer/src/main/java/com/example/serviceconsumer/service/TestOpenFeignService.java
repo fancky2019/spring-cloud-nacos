@@ -1,6 +1,7 @@
 package com.example.serviceconsumer.service;
 
 import com.example.serviceconsumer.model.Student;
+import feign.okhttp.OkHttpClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +20,13 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(value = "${service.provider-one}")//开启回调
 public interface TestOpenFeignService {
 
+    /*
+      Client 接口默认方法execute
+      HttpURLConnection connection = this.convertAndSend(request, options);
+
+      OkHttpClient
+      execute
+     */
     @GetMapping(value = "/test/helloWorld")
     String helloWorld(@RequestParam String hello);
 

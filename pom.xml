@@ -57,7 +57,7 @@
 		</dependency>
 
 
-        <!--		pringcloud高版本默认不加载bootstrap.yml文件，-->
+        <!--		springCloud高版本默认不加载bootstrap.yml文件，-->
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap -->
         <dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -71,7 +71,16 @@
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 
-        <!--  openfeign 依赖loadbalancer-->
+        <!--用okhttp 代替默认的  HTTP Client，JDK 原生的 URLConnection 发送HTTP请求，没有连接池-->
+		<!-- https://mvnrepository.com/artifact/io.github.openfeign/feign-okhttp -->
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-okhttp</artifactId>
+<!--			<version>11.7</version>-->
+		</dependency>
+
+
+		<!--  openfeign 依赖loadbalancer-->
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-loadbalancer -->
         <dependency>
 			<groupId>org.springframework.cloud</groupId>
