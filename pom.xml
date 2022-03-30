@@ -79,7 +79,7 @@
 <!--			<version>11.7</version>-->
 		</dependency>
 
-
+		<!--使用Spring Cloud LoadBalancer 进行客户端负载均衡-->
 		<!--  openfeign 依赖loadbalancer-->
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-loadbalancer -->
         <dependency>
@@ -87,7 +87,7 @@
 			<artifactId>spring-cloud-loadbalancer</artifactId>
 		</dependency>
 
-		<!--使用Spring Cloud LoadBalancer 进行客户端负载均衡-->
+		<!--使用sleuth进行日志链路跟踪traceId-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-sleuth</artifactId>

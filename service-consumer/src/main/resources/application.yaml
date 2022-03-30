@@ -1,48 +1,48 @@
-server:
-  port: 8210
-spring:
-  application:
-    name: service-consumer
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-
-service:
-  provider-one: service-provider-one
-
-config:
-  appName: product_test
-
-feign:
-  httpclient:
-    connection-timeout: 2000  #单位ms,默认2000
-    max-connections: 200 #线程池最大连接数
-    enabled: false
-  okhttp: #用okhttp 代替默认的Client，JDK 原生的 URLConnection 发送HTTP请求，没有连接池
-    enabled: true
-#  # 开启 hystrix 默认情况下feign是没有开启hystrix
-#  hystrix:
+#server:
+#  port: 8210
+#spring:
+#  application:
+#    name: service-consumer
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'
+#
+#service:
+#  provider-one: service-provider-one
+#
+#config:
+#  appName: product_test
+#
+#feign:
+#  httpclient:
+#    connection-timeout: 2000  #单位ms,默认2000
+#    max-connections: 200 #线程池最大连接数
+#    enabled: false
+#  okhttp: #用okhttp 代替默认的Client，JDK 原生的 URLConnection 发送HTTP请求，没有连接池
 #    enabled: true
-## 熔断机制
-#hystrix:
-#  shareSecurityContext: true
-#  command:
-#    default:
-#      execution:
-#        isolation:
-#          thread:
-#            timeoutInMillisecond: 10000
-#      circuitBreaker:
-#        sleepWindowInMilliseconds: 50000
-#        forceClosed: true
-#logging:
-#  config: classpath:log4j2.xml
-
-
+##  # 开启 hystrix 默认情况下feign是没有开启hystrix
+##  hystrix:
+##    enabled: true
+### 熔断机制
+##hystrix:
+##  shareSecurityContext: true
+##  command:
+##    default:
+##      execution:
+##        isolation:
+##          thread:
+##            timeoutInMillisecond: 10000
+##      circuitBreaker:
+##        sleepWindowInMilliseconds: 50000
+##        forceClosed: true
+##logging:
+##  config: classpath:log4j2.xml
+#
+#
