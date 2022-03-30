@@ -31,6 +31,7 @@ public class ServiceConsumerApplication  {
      1、在程序中 bootstrap.yaml文件中配置配置中心的信息
      2、将application.yaml中的配置信息在nacos的配置列表配置发布
         Data ID=applicationName+profile 如：service-consumer-test.yaml
+        注：配置文件带yaml后缀。
      */
     public static void main(String[] args) {
         SpringApplication.run(ServiceConsumerApplication.class, args);
