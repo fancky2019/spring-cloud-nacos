@@ -6,6 +6,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @RestController
 @RequestMapping("/test")
 public class TestController {
@@ -16,6 +19,15 @@ public class TestController {
     @Value("${server.port}")
     private String port;
 
+
+    @GetMapping("/configName")
+    public String configName(String name)
+    {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
+        String dateStr = dateTimeFormatter.format(LocalDateTime.now());
+        logger.info(dateStr);
+        return dateStr+":"+applicationName+":"+ port +"-";
+    }
     @GetMapping("/helloWorld")
     public String helloWorld(String hello)
     {

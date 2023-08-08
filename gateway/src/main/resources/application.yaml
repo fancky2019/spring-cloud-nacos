@@ -52,7 +52,9 @@
 #          # 将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了）如：server-->注册中心SERVER
 #          lowerCaseServiceId: true
 #      routes:
-#        - id: registercenter
+#         #所有的微服务都要配置路由转发，否则转发找不到报404
+#        #id 名字不能一样，服务集群可以用相同的服务名称，一个路由id
+#        - id: service-consumer
 #          # 是否会经过负载均衡，是通过判断uri的schema的，如果是以lb开头，则会开启负载均衡
 #          # lb代表会经过负载均衡，从注册中心获取服务，SERVER:为注册中心的服务名称
 #          #会用自带的负载均衡：http://localhost:8080/gateway1/user?name=a
@@ -61,6 +63,64 @@
 #          predicates:
 #            #路径要对应，区分大小写
 #            - Path=/gateway/**
+#          filters:
+#            #从/gateway/**开始转发跳过的目录数，StripPrefix=1跳过/gateway/
+#            - StripPrefix=1
+#            # RedisRateLimter RequestRateLimiter
+#            - name: RequestRateLimiter
+#              args:
+#                # 先启动Redis不停刷新连接  报错：HTTP ERROR 429（too many request），证明成功
+#                # 允许用户每秒处理多少个请求 10
+#                redis-rate-limiter.replenishRate: 1
+#                # 令牌桶的容量，允许在一秒钟内完成的最大请求数 20
+#                redis-rate-limiter.burstCapacity: 2
+#                # 使用（Spring Expression Language）按名称引用bean，在配置文件中定义的名称 "#{@ipKeyResolver}"
+#                #令牌桶容量大于请求数，可以储存额外的数量用于临时激增请求，大于桶拒绝429错误
+#                key-resolver: "#{@pathKeyResolver}"
+#            #熔断过滤器,如果timeoutInMilliseconds配置的时间内没有回复，则会重定向到fallbackUri
+#            - name: CircuitBreaker
+#              args:
+#                name: myCircuitBreaker
+#                fallbackUri: forward:/servercallback/defaultfallback
+#
+#        - id: service-provider-one
+#          # 是否会经过负载均衡，是通过判断uri的schema的，如果是以lb开头，则会开启负载均衡
+#          # lb代表会经过负载均衡，从注册中心获取服务，SERVER:为注册中心的服务名称
+#          #会用自带的负载均衡：http://localhost:8080/gateway1/user?name=a
+#          # 客户端负载均衡实现：两个微服务注册到注册中心的名称一样，ip和端口不一样
+#          uri: lb://service-provider-one
+#          predicates:
+#            #路径要对应，区分大小写
+#            - Path=/service-one/**
+#          filters:
+#            #从/gateway/**开始转发跳过的目录数，StripPrefix=1跳过/gateway/
+#            - StripPrefix=1
+#            # RedisRateLimter RequestRateLimiter
+#            - name: RequestRateLimiter
+#              args:
+#                # 先启动Redis不停刷新连接  报错：HTTP ERROR 429（too many request），证明成功
+#                # 允许用户每秒处理多少个请求 10
+#                redis-rate-limiter.replenishRate: 1
+#                # 令牌桶的容量，允许在一秒钟内完成的最大请求数 20
+#                redis-rate-limiter.burstCapacity: 2
+#                # 使用（Spring Expression Language）按名称引用bean，在配置文件中定义的名称 "#{@ipKeyResolver}"
+#                #令牌桶容量大于请求数，可以储存额外的数量用于临时激增请求，大于桶拒绝429错误
+#                key-resolver: "#{@pathKeyResolver}"
+#            #熔断过滤器,如果timeoutInMilliseconds配置的时间内没有回复，则会重定向到fallbackUri
+#            - name: CircuitBreaker
+#              args:
+#                name: myCircuitBreaker
+#                fallbackUri: forward:/servercallback/defaultfallback
+#
+#        - id: service-provider-two
+#          # 是否会经过负载均衡，是通过判断uri的schema的，如果是以lb开头，则会开启负载均衡
+#          # lb代表会经过负载均衡，从注册中心获取服务，SERVER:为注册中心的服务名称
+#          #会用自带的负载均衡：http://localhost:8080/gateway1/user?name=a
+#          # 客户端负载均衡实现：两个微服务注册到注册中心的名称一样，ip和端口不一样
+#          uri: lb://service-provider-two
+#          predicates:
+#            #路径要对应，区分大小写
+#            - Path=/service-two/**
 #          filters:
 #            #从/gateway/**开始转发跳过的目录数，StripPrefix=1跳过/gateway/
 #            - StripPrefix=1
@@ -121,8 +181,11 @@
 #
 ##注意：服务中心和提供的服务都要启动
 ##打开链接测试，不停刷新会发现负载均衡
-##http://localhost:8080/gateway1/user?name=a
+##http://localhost:8201/gateway/test/helloWorld?hello=test
 #
 #demo:
 #  JWTSecretKey: GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk
 #
+#logging:
+#  level:
+#    org.springframework.cloud: trace
