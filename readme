@@ -1,0 +1,10 @@
+服务注册中心：nacos +Eureka
+    配置中心:Config Server (nacos有配)
+admin:监控 实时报警功能
+gateway：（认证+负载均衡+限流+路由转发）+ 熔断
+Sleuth:分布式系统中链
+
+
+
+
+OpenFeign:服务调用
