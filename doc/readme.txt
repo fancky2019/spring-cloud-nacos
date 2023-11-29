@@ -9,7 +9,10 @@ nacos:
 环境准备：
 下载：https://nacos.io/zh-cn/docs/quick-start.html
 解压：tar -zxvf nacos-server-1.4.3.tar.gz
-bin目录启动：startup.cmd -m standalone
+win bin目录启动单例模式：startup.cmd -m standalone
+集群模式:sh startup.sh
+高可用集群：最少主备模式（2台），使用外置数据源mysql 配置保存高可用信息
+
 
 配置管理控制台：
 http://localhost:8848/nacos/#/login
