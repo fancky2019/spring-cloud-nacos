@@ -41,20 +41,25 @@ feign:
 
 # 熔断机制
  # Hystrix默认超时时间是1秒
+
 hystrix:
   shareSecurityContext: true
   command:
     default:
+#      metrics:
+##          窗口期:默认10s: timeInMilliseconds内请求requestVolumeThreshold 次数之后达到errorThresholdPercentage 就不会调用幅度
+           # 超过 sleepWindowInMilliseconds 时间才会调用服务
+#          timeInMilliseconds: 10000
       execution:
         isolation:
           thread:
             #调用者的超时时间，单位ms。超时进入熔断，
-            timeoutInMilliseconds: 300
+            timeoutInMilliseconds: 1000
       circuitBreaker:
-        forceClosed: true
-        #当在配置时间窗口内达到此数量后，才会根据其他条件进行短路
-        requestVolumeThreshold: 2
-        #出错百分比阈值，当达到此阈值后，开始短路。默认50%）直接返回，但是还会调用业务代码。
+#        forceClosed: true
+        #默认20 当在配置时间窗口内达到此数量后，才会根据其他条件进行短路
+        requestVolumeThreshold: 20
+        #出错百分比阈值，当达到此阈值后，开始短路。默认50%）直接返回，
         errorThresholdPercentage: 50%
         #        在此值的时间内，hystrix会拒绝新的请求，只有过了这个时间，断路器会进入半开状态。
         #        即：熔断多少秒后去尝试请求。

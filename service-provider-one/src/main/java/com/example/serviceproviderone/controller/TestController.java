@@ -22,7 +22,7 @@ public class TestController {
 
     @GetMapping("/helloWorld")
     public String helloWorld(String hello) throws InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 //        int m=Integer.parseInt("ds");//异常不会进入熔断，超时熔断
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
         String dateStr = dateTimeFormatter.format(LocalDateTime.now());

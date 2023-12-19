@@ -35,7 +35,8 @@ public class UserServiceFallBackFactory implements FallbackFactory<TestOpenFeign
             @Override
             public String helloWorld(String hello) throws Exception {
                 log.error(throwable.getMessage());
-                throw new Exception( "异常超时熔断");
+                //throw new Exception( "异常超时熔断");
+                return  "异常超时熔断";
             }
 
             @Override
