@@ -1,5 +1,6 @@
 package com.example.serviceconsumer.service;
 
+import com.example.serviceconsumer.model.MessageResult;
 import com.example.serviceconsumer.model.Student;
 import feign.okhttp.OkHttpClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 //@FeignClient(name = "feignClientTest", url = "${sbp.ordermigratedbtoolurl}") springboot
 //@FeignClient(value = "server", fallbackFactory = UserServiceFallBackFactory.class)//开启回调
-@FeignClient(value = "${service.provider-one}")//开启回调
+@FeignClient(value = "${service.provider-one}", fallbackFactory = UserServiceFallBackFactory.class)//开启回调
 public interface TestOpenFeignService {
 
     /*
@@ -29,7 +30,7 @@ public interface TestOpenFeignService {
      */
     
     @GetMapping(value = "/test/helloWorld")
-    String helloWorld(@RequestParam String hello);
+   String helloWorld(@RequestParam String hello) throws Exception;
 
     @PostMapping("/test/add")
     Student add(@RequestBody Student student);

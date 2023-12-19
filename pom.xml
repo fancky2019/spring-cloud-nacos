@@ -71,6 +71,19 @@
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 
+		<!--        这两个必须加版本号，不加报错，build失败-->
+		<!--熔断器 Dashboard-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+			<version>2.2.9.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+			<version>2.2.9.RELEASE</version>
+		</dependency>
+
         <!--用okhttp 代替默认的  HTTP Client，JDK 原生的 URLConnection 发送HTTP请求，没有连接池-->
 		<!-- https://mvnrepository.com/artifact/io.github.openfeign/feign-okhttp -->
 		<dependency>
@@ -92,6 +105,15 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-sleuth</artifactId>
         </dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<!--            <version>1.18.12</version>-->
+			<!--            <scope>provided</scope>-->
+		</dependency>
+
 	</dependencies>
 
     <!--    整理非org.springframework.boot的版本依赖-->

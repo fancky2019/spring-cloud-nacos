@@ -34,7 +34,7 @@ idea: view--Tool Windows--services(Alt+8)
 debug对应的服务
 
 环境依赖：
-nacos、redis
+nacos、redis（gateway依赖)
 
 服务启动不分先后
 

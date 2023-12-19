@@ -1,48 +1,70 @@
-#server:
-#  port: 8210
-#spring:
-#  application:
-#    name: service-consumer
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: 127.0.0.1:8848
-#
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: '*'
-#
-#service:
-#  provider-one: service-provider-one
-#
-#config:
-#  appName: product_test
-#
-#feign:
-#  httpclient:
-#    connection-timeout: 2000  #单位ms,默认2000
-#    max-connections: 200 #线程池最大连接数
-#    enabled: false
-#  okhttp: #用okhttp 代替默认的Client，JDK 原生的 URLConnection 发送HTTP请求，没有连接池
-#    enabled: true
-##  # 开启 hystrix 默认情况下feign是没有开启hystrix
-##  hystrix:
-##    enabled: true
-### 熔断机制
-##hystrix:
-##  shareSecurityContext: true
-##  command:
-##    default:
-##      execution:
-##        isolation:
-##          thread:
-##            timeoutInMillisecond: 10000
-##      circuitBreaker:
-##        sleepWindowInMilliseconds: 50000
-##        forceClosed: true
-##logging:
-##  config: classpath:log4j2.xml
-#
-#
+server:
+  port: 8210
+spring:
+  application:
+    name: service-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+service:
+  provider-one: service-provider-one
+
+config:
+  appName: product_test
+
+feign:
+  # 设置 feign 超时时间:超时报异常，设置熔断则进入熔断处理逻辑
+  client:
+    config:
+      # default、service-provider-two设置的全局超时时间，指定服务名称可以设置单个服务的超时时间
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+  httpclient:
+    connection-timeout: 10000  #单位ms,默认2000
+    max-connections: 200 #线程池最大连接数
+    enabled: false
+  okhttp: #用okhttp 代替默认的Client，JDK 原生的 URLConnection 发送HTTP请求，没有连接池
+    enabled: true
+  # 开启熔断 hystrix 默认情况下feign是没有开启hystrix
+  # 旧 hystrix  新版本 circuitbreaker
+  circuitbreaker:
+    enabled: true
+
+# 熔断机制
+ # Hystrix默认超时时间是1秒
+hystrix:
+  shareSecurityContext: true
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            #调用者的超时时间，单位ms。超时进入熔断，
+            timeoutInMilliseconds: 300
+      circuitBreaker:
+        forceClosed: true
+        #当在配置时间窗口内达到此数量后，才会根据其他条件进行短路
+        requestVolumeThreshold: 2
+        #出错百分比阈值，当达到此阈值后，开始短路。默认50%）直接返回，但是还会调用业务代码。
+        errorThresholdPercentage: 50%
+        #        在此值的时间内，hystrix会拒绝新的请求，只有过了这个时间，断路器会进入半开状态。
+        #        即：熔断多少秒后去尝试请求。
+        #短路多久以后开始尝试是否恢复，单位ms，默认5s
+        sleepWindowInMilliseconds: 5000
+
+ribbon:
+  ReadTimeout: 20000 #处理请求的超时时间，默认为1秒
+  ConnectTimeout: 20000 #接建立的超时时长，默认1秒
+#logging:
+#  config: classpath:log4j2.xml
+
+

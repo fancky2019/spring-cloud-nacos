@@ -36,7 +36,7 @@ public class TestController {
     private String appName;
 
     @GetMapping("/helloWorld")
-    public String helloWorld(String hello) {
+    public String helloWorld(String hello) throws Exception {
 
         logger.info("hello="+hello);
         String jsonStr =appName +":"+ testOpenFeignService.helloWorld("test");
@@ -53,15 +53,15 @@ public class TestController {
 
 
     @GetMapping("/configTest")
-    public String configTest(String hello) {
+    public String configTest(String hello) throws Exception {
 
         String jsonStr =appName +":"+ testOpenFeignService.helloWorld("test");
         int m = 0;
         try {
             //设置超时熔断
             Thread.sleep(10*1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+
         }
         return appName + ":" + jsonStr;
 //        try {

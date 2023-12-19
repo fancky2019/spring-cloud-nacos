@@ -10,9 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
-/**
 
- */
 //@Configuration
 //@ConditionalOnClass(Feign.class)
 //@AutoConfigureBefore(FeignAutoConfiguration.class)
