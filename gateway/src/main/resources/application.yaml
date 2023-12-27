@@ -172,7 +172,8 @@
 ##              args:
 ##                name: fallbackcmd
 ##                fallbackUri: forward:/servercallback/springbootproject
-#
+
+#springboot 监控 Actuator
 #management:
 #  endpoints:
 #    web:

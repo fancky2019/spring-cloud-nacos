@@ -63,18 +63,18 @@ public class LoggerAspectj {
      * @return
      */
     @Around(value = "execution(* com.example.serviceprovidertwo.controller.*.*(..))")
-    public Object aroundMethod(ProceedingJoinPoint jp) {
+    public Object aroundMethod(ProceedingJoinPoint jp) throws Throwable {
         String methodName = jp.getSignature().getName();
         Object result = null;
-        try {
+//        try {
             LOGGER.info("【环绕增强中的--->前置增强】：the method 【" + methodName + "】 begins with " + Arrays.asList(jp.getArgs()));
             //执行目标方法
             result = jp.proceed();
             LOGGER.info("【环绕增强中的--->返回增强】：the method 【" + methodName + "】 ends with " + result);
-        } catch (Throwable e) {
-            result = "error";
-            LOGGER.info("【环绕增强中的--->异常增强】：the method 【" + methodName + "】 occurs exception " + e);
-        }
+//        } catch (Throwable e) {
+//            result = "error";
+//            LOGGER.info("【环绕增强中的--->异常增强】：the method 【" + methodName + "】 occurs exception " + e);
+//        }
         LOGGER.info("【环绕增强中的--->后置增强】：-----------------end.----------------------");
         return result;
     }

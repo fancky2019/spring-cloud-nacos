@@ -4,7 +4,9 @@
 <configuration status="WARN" monitorInterval="30">
     <Properties>
         <!--自定义一些常量，之后使用${变量名}引用-->
-        <Property name="logFilePath">log</Property>
+
+        <Property name="basePath">logs/</Property>
+        <Property name="logFilePath">logs/${date:yyyy-MM}/${date:yyyy-MM-dd}/</Property>
         <Property name="logFileName">test.log</Property>
 <!--        "[%d{yyyy-MM-dd HH:mm:ss:SSS}] [%p] - %m%n"-->
         <property name="log_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{traceId}] %-5level %c{36} - %m%n</property>
@@ -33,18 +35,41 @@
         <console name="Console" target="SYSTEM_OUT">
            <PatternLayout pattern="${log_pattern}"/>
         </console>
+<!--        fileName 日志名 ，filePattern 归档日志名-->
         <!--        linux指定文件文职-->
         <!--        <RollingFile name="RollingFile" fileName="var/log/ordermigratedbtool/${date:yyyy-MM}/${date:yyyy-MM-dd}/log.log"-->
         <!--                     filePattern="var/log/ordermigratedbtool/$${date:yyyy-MM}/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">-->
-        <RollingFile name="RollingFile" fileName="logs/${date:yyyy-MM}/${date:yyyy-MM-dd}/log.log"
-                     filePattern="logs/$${date:yyyy-MM}/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="RollingFile" fileName="${logFilePath}log.log"
+                     filePattern="${logFilePath}/log-%d{yyyy-MM-dd}-%i.gz">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${log_pattern}"/>
             <Policies>
+<!--                触发滚动归档压缩-->
                 <TimeBasedTriggeringPolicy interval="6" modulate="true"/>
                 <SizeBasedTriggeringPolicy size="100 MB"/>
+<!--                <SizeBasedTriggeringPolicy size="5 KB"/>-->
             </Policies>
-            <DefaultRolloverStrategy max="20"/>
+<!--            max 每天最大滚动文件数,超过则会删除之前的-->
+            <DefaultRolloverStrategy max="20">
+<!--               从basePath 下的 maxDepth:目录层次。-->
+                <Delete basePath="${basePath}" maxDepth="3">
+<!--                   根据 basePath 和 maxDepth 调整"*/*/*.gz" ，否则路径不匹配无法删除-->
+                    <IfFileName glob="*/*/*.gz">
+                        <IfAny>
+                            <IfLastModified age="365d"/>
+<!--                            <IfLastModified age="1m"/>-->
+                        </IfAny>
+                    </IfFileName>
+                </Delete>
+                <Delete basePath="${basePath}" maxDepth="3">
+                    <IfFileName glob="*/*/*.log">
+                        <IfAny>
+                            <!--       365d,24H-->
+                            <IfLastModified age="365d"/>
+                        </IfAny>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
 
         <Async name="AsyncMail">

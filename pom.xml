@@ -5,7 +5,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.2</version>
+<!--		不赞成在设置属性，应设置具体版本。 报红不影响，可以设置idea不让它报红-->
+		<version>${spring-boot.version}</version>
         <!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
 
@@ -14,7 +15,7 @@
 
 	<groupId>com.fancky</groupId>
 	<artifactId>spring-cloud-nacos</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${project.version}</version>
 	<name>spring-cloud-nacos</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -25,13 +26,27 @@
 		<module>service-consumer</module>
 		<module>service-provider-one</module>
 		<module>service-provider-two</module>
+		<module>fancky-common</module>
 	</modules>
 
 	<properties>
+		<project.version>0.0.1-SNAPSHOT</project.version>
 		<java.version>1.8</java.version>
 		<nacos.config.version>2021.1</nacos.config.version>
-		<spring-cloud.version>2020.0.3</spring-cloud.version>
+		<spring-boot.version>2.7.18</spring-boot.version>
+		<spring-cloud.version>2021.0.8</spring-cloud.version>
 		<spring-boot-admin.version>2.5.4</spring-boot-admin.version>
+		<mysql.version>8.0.33</mysql.version>
+		<mybatis-plus.version>3.5.4.1</mybatis-plus.version>
+		<pagehelper.version>2.1.0</pagehelper.version>
+		<jsqlparser.version>4.7</jsqlparser.version>
+
+		<commons-lang3.version>3.14.0</commons-lang3.version>
+		<springdoc.version>1.7.0</springdoc.version>
+		<disruptor.version>3.4.4</disruptor.version>
+		<activation.version>1.1.1</activation.version>
+		<javaxmail.version>1.6.2</javaxmail.version>
+
 	</properties>
 
 	<dependencies>
@@ -106,12 +121,76 @@
 			<artifactId>spring-cloud-starter-sleuth</artifactId>
         </dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
+		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<!--            <version>1.18.12</version>-->
 			<!--            <scope>provided</scope>-->
+		</dependency>
+
+		<!--        log4j2配置-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+
+			<exclusions><!--log4j2 加上下面去掉默认配置 -->
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!--添加log4j2依赖-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<!--        如果log4j2配置文件是yml要加此配置，如果是xml配置不用加-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+		</dependency>
+		<!--          log4j2异步写日志需要用-->
+		<!-- https://mvnrepository.com/artifact/com.lmax/disruptor -->
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>${disruptor.version}</version>
+		</dependency>
+		<!--        log4j2邮件-->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>${activation.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>${javaxmail.version}</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${springdoc.version}</version>
 		</dependency>
 
 	</dependencies>
