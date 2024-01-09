@@ -15,5 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface DemoProductMapper extends BaseMapper<DemoProduct> {
-
+    DemoProduct selectByPrimaryKey(Integer id);
 }

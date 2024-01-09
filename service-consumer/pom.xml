@@ -37,6 +37,11 @@
 			<version>${spring-boot-admin.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.fancky</groupId>
+			<artifactId>fancky-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 
 

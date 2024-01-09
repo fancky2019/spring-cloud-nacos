@@ -26,6 +26,9 @@ import java.util.List;
 @Service
 public class DemoProductServiceImpl extends ServiceImpl<DemoProductMapper, DemoProduct> implements IDemoProductService {
     public PageData<DemoProduct> getDemoProductList(DemoProductRequest request) {
+
+        DemoProduct demoProduct=   this.getBaseMapper().selectByPrimaryKey(100);
+
         PageData<DemoProduct> pageData = new PageData<>();
         PageHelper.startPage(request.getPageIndex(), request.getPageSize());
 

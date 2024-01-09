@@ -5,11 +5,8 @@ package com.example.serviceconsumer.service;
  变更记录：feign.hystrix.FallbackFactory--->org.springframework.cloud.openfeign.FallbackFactory;
  */
 
-import com.example.serviceconsumer.model.MessageResult;
 import com.example.serviceconsumer.model.Student;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 

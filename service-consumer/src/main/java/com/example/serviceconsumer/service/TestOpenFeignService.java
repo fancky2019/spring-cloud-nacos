@@ -1,12 +1,11 @@
 package com.example.serviceconsumer.service;
 
-import com.example.serviceconsumer.model.MessageResult;
 import com.example.serviceconsumer.model.Student;
-import feign.okhttp.OkHttpClient;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /*
     参见SpringCloud 项目

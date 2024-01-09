@@ -1520,3 +1520,431 @@ management:
 2023-12-27 16:25:51.463 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - removed ips(1) service: DEFAULT_GROUP@@service-provider-two@@DEFAULT -> [{"instanceId":"172.16.28.1#8212#DEFAULT#DEFAULT_GROUP@@service-provider-two","ip":"172.16.28.1","port":8212,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@service-provider-two","metadata":{"preserved.register.source":"SPRING_CLOUD"},"instanceHeartBeatInterval":5000,"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000}]
 2023-12-27 16:25:51.463 [nacos.publisher-com.alibaba.nacos.client.naming.event.InstancesChangeEvent] [] DEBUG com.alibaba.nacos.common.notify.NotifyCenter - [NotifyCenter] the com.alibaba.nacos.client.naming.event.InstancesChangeEvent@22242a96 will received by com.alibaba.nacos.client.naming.event.InstancesChangeNotifier@205f52ea
 2023-12-27 16:25:51.464 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - current ips:(0) service: DEFAULT_GROUP@@service-provider-two@@DEFAULT -> []
+2023-12-27 16:46:32.087 [main] [] INFO  com.alibaba.nacos.client.config.impl.LocalConfigInfoProcessor - LOCAL_SNAPSHOT_PATH:C:\Users\lirui\nacos\config
+2023-12-27 16:46:32.098 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=service-provider-two&group=DEFAULT_GROUP, body: null
+2023-12-27 16:46:32.099 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@670d4d38]
+2023-12-27 16:46:32.113 [main] [] INFO  com.alibaba.nacos.client.config.impl.Limiter - limitTime:5.0
+2023-12-27 16:46:32.138 [main] [] WARN  com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder - Ignore the empty nacos configuration and get it based on dataId[service-provider-two] & group[DEFAULT_GROUP]
+2023-12-27 16:46:32.139 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=service-provider-two.yaml&group=DEFAULT_GROUP, body: null
+2023-12-27 16:46:32.139 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@670d4d38]
+2023-12-27 16:46:32.142 [main] [] WARN  com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder - Ignore the empty nacos configuration and get it based on dataId[service-provider-two.yaml] & group[DEFAULT_GROUP]
+2023-12-27 16:46:32.142 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=service-provider-two-test.yaml&group=DEFAULT_GROUP, body: null
+2023-12-27 16:46:32.142 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@670d4d38]
+2023-12-27 16:46:32.146 [main] [] INFO  com.alibaba.nacos.client.config.utils.JvmUtil - isMultiInstance:false
+2023-12-27 16:46:32.147 [main] [] DEBUG com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder - Loading nacos data, dataId: 'service-provider-two-test.yaml', group: 'DEFAULT_GROUP', data: server:
+  port: 8212
+spring:
+  application:
+    name: service-provider-two  #service-provider-one nacos将服务服务注册中心，默认采用应用程序名称。如果两个服务名称一样，网关会采用负载均衡。默认轮训
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+#        metadata:  #以下是springbootadmin的配置
+#          management:
+#            context-path: '${server.servlet.context-path}/actuator'
+  datasource:
+    #mysql
+    #具体参见类DynamicDataSourceAspect 说明
+    #不用此默认，默认就是写库,多数据源用jdbcUrl，不是url,spring 默认用的是url，用多数据源用url会报错。
+    url: jdbc:mysql://127.0.0.1:3306/demo?useUnicode=true&characterEncoding=utf8&useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&allowMultiQueries=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+
+    # HikariCP： springboot2.0 默认的连接池。https://github.com/brettwooldridge/HikariCP
+    #HikariCP  高并发性能优。mysql 8h 空闲断开连接可用quartz 调度定期select 1  。
+    #产生此问题DB工作就不繁忙，性能要求不高。可以用上面dbcp2的配置，采取空闲查询策略。
+    #要引入mybatis
+    type: com.zaxxer.hikari.HikariDataSource
+    # Hikari will use the above plus the following to setup connection pooling
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 100
+      auto-commit: true #OrderManagerService 代码异常，spring自动回滚，或者手动回滚。否则正常自动提交
+      idle-timeout: 60000
+      #pool-name: HikariCP-Demo
+      max-lifetime: 1800000
+      connection-timeout: 600000
+      #connection-test-query: SELECT 1
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+
+#mybatis 配置和mybatis-plus不一样，springbootstarter的myabtis 版本要和mybatis-plus封装的mybatis版本保持一直，
+#否则项目中同时存在的myabtis 和mybatis0plus因引用的mybatis版本不一致无法共存。
+#mybatis:
+
+#配置日志  打印sql语句
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+##mybatis 分页 pageHelper插件4.0.0以后的版本支持自动识别使用的数据库
+#pagehelper:
+#  ##  mysql、sqlserver2012，没找到sqlserver2008版本的
+#  helperDialect: sqlserver2012
+#  reasonable: true
+#  supportMethodsArguments: true
+#  params: count=countSql
+2023-12-27 16:46:32.151 [main] [] INFO  org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration - Located property source: [BootstrapPropertySource {name='bootstrapProperties-service-provider-two-test.yaml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-service-provider-two.yaml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-service-provider-two,DEFAULT_GROUP'}]
+2023-12-27 16:46:32.173 [main] [] INFO  com.example.serviceprovidertwo.ServiceProviderTwoApplication - The following 1 profile is active: "test"
+2023-12-27 16:46:32.737 [main] [] DEBUG com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration - Searching for mappers annotated with @Mapper
+2023-12-27 16:46:32.737 [main] [] DEBUG com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration - Using auto-configuration base package 'com.example.serviceprovidertwo'
+2023-12-27 16:46:33.071 [main] [] DEBUG org.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+2023-12-27 16:46:33.253 [main] [] INFO  org.springframework.cloud.context.scope.GenericScope - BeanFactory id=5ecbdd8d-2f36-3d40-934c-4ffd96734233
+2023-12-27 16:46:33.295 [main] [] DEBUG reactor.util.Loggers - Using Slf4j logging framework
+2023-12-27 16:46:33.296 [main] [] DEBUG reactor.core.publisher.Hooks - Hooking onEachOperator: org.springframework.cloud.sleuth.autoconfig.instrument.reactor.TraceReactorAutoConfiguration$TraceReactorConfiguration
+2023-12-27 16:46:33.296 [main] [] DEBUG reactor.core.publisher.Hooks - Hooking onLastOperator: org.springframework.cloud.sleuth.autoconfig.instrument.reactor.TraceReactorAutoConfiguration$TraceReactorConfiguration
+2023-12-27 16:46:33.761 [main] [] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8212 (http)
+2023-12-27 16:46:33.768 [main] [] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8212"]
+2023-12-27 16:46:33.770 [main] [] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-12-27 16:46:33.770 [main] [] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2023-12-27 16:46:33.896 [main] [] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-12-27 16:46:33.896 [main] [] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1713 ms
+2023-12-27 16:46:33.959 [main] [] DEBUG io.micrometer.core.util.internal.logging.InternalLoggerFactory - Using SLF4J as the default logging framework
+2023-12-27 16:46:34.047 [main] [] WARN  com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
+2023-12-27 16:46:34.048 [main] [] INFO  com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2023-12-27 16:46:34.051 [main] [] DEBUG com.netflix.hystrix.strategy.HystrixPlugins - Created HystrixDynamicProperties. Using class : com.netflix.hystrix.strategy.properties.archaius.HystrixDynamicPropertiesArchaius
+2023-12-27 16:46:34.055 [main] [] INFO  com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@3d718248
+2023-12-27 16:46:35.805 [main] [] INFO  org.springframework.cloud.commons.util.InetUtils - Cannot determine local hostname
+2023-12-27 16:46:35.818 [main] [] INFO  com.alibaba.nacos.client.naming - initializer namespace from System Property :null
+2023-12-27 16:46:35.819 [main] [] INFO  com.alibaba.nacos.client.naming - initializer namespace from System Environment :null
+2023-12-27 16:46:35.820 [main] [] INFO  com.alibaba.nacos.client.naming - initializer namespace from System Property :null
+2023-12-27 16:46:35.827 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - server list provided by user: [127.0.0.1:8848]
+2023-12-27 16:46:35.827 [main] [] DEBUG com.alibaba.nacos.client.naming - server list provided by user: [127.0.0.1:8848]
+2023-12-27 16:46:35.831 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:46:36.157 [main] [] DEBUG com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean - Parsed mapper file: 'file [D:\work\project\git\java\spring-cloud-nacos\service-provider-two\target\classes\mapper\DemoProductMapper.xml]'
+2023-12-27 16:46:36.463 [main] [] WARN  com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
+2023-12-27 16:46:36.463 [main] [] INFO  com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2023-12-27 16:46:36.720 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	c.e.s.c.DemoProductController:
+	{POST [/api/demoProduct/addDemoProductList]}: addDemoProductList(DemoProductRequest)
+	{GET [/api/demoProduct/getDemoProductList]}: getDemoProductList(DemoProductRequest)
+2023-12-27 16:46:36.722 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	c.e.s.c.TestController:
+	{POST [/test/add]}: add(Student)
+	{GET [/test/configName]}: configName(String)
+	{GET [/test/helloWorld]}: helloWorld(String)
+2023-12-27 16:46:36.723 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	o.s.b.a.w.s.e.BasicErrorController:
+	{ [/error]}: error(HttpServletRequest)
+	{ [/error], produces [text/html]}: errorHtml(HttpServletRequest,HttpServletResponse)
+2023-12-27 16:46:36.734 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	o.s.w.a.OpenApiWebMvcResource:
+	{GET [/v3/api-docs.yaml], produces [application/vnd.oai.openapi]}: openapiYaml(HttpServletRequest,String,Locale)
+	{GET [/v3/api-docs], produces [application/json]}: openapiJson(HttpServletRequest,String,Locale)
+2023-12-27 16:46:36.734 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	{GET [/swagger-ui.html]}: redirectToUi(HttpServletRequest)
+2023-12-27 16:46:36.734 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	o.s.w.u.SwaggerConfigResource:
+	{GET [/v3/api-docs/swagger-config], produces [application/json]}: openapiJson(HttpServletRequest)
+2023-12-27 16:46:36.749 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 'beanNameHandlerMapping' {}
+2023-12-27 16:46:36.766 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 'resourceHandlerMapping' {/webjars/**=ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/]], /**=ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]], /swagger-ui*/*swagger-initializer.js=ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/]], /swagger-ui*/**=ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/]]}
+2023-12-27 16:46:36.816 [main] [] DEBUG com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration - Not found configuration for registering mapper bean using @MapperScan, MapperFactoryBean and MapperScannerConfigurer.
+2023-12-27 16:46:38.493 [main] [] INFO  org.springframework.cloud.commons.util.InetUtils - Cannot determine local hostname
+2023-12-27 16:46:38.666 [main] [] WARN  org.springframework.cloud.loadbalancer.config.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2023-12-27 16:46:38.746 [main] [] INFO  org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver - Exposing 20 endpoint(s) beneath base path '/actuator'
+2023-12-27 16:46:38.806 [main] [] DEBUG com.alibaba.nacos.client.naming - failover-mode: false
+2023-12-27 16:46:38.807 [main] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=64829&clusters=DEFAULT, body: {}
+2023-12-27 16:46:39.060 [main] [] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8212"]
+2023-12-27 16:46:39.072 [main] [] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8212 (http) with context path ''
+2023-12-27 16:46:39.076 [main] [] INFO  com.alibaba.nacos.client.naming - [BEAT] adding beat: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false} to beat map.
+2023-12-27 16:46:39.076 [main] [] INFO  com.alibaba.nacos.client.naming - [REGISTER-SERVICE] public registering service DEFAULT_GROUP@@service-provider-two with instance: Instance{instanceId='null', ip='172.16.28.1', port=8212, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+2023-12-27 16:46:39.078 [main] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: POST, url: http://127.0.0.1:8848/nacos/v1/ns/instance?app=unknown&groupName=DEFAULT_GROUP&metadata=%7B%22preserved.register.source%22%3A%22SPRING_CLOUD%22%7D&namespaceId=public&port=8212&enable=true&healthy=true&clusterName=DEFAULT&ip=172.16.28.1&weight=1.0&ephemeral=true&serviceName=DEFAULT_GROUP%40%40service-provider-two, body: {}
+2023-12-27 16:46:39.083 [main] [] INFO  com.alibaba.cloud.nacos.registry.NacosServiceRegistry - nacos registry, DEFAULT_GROUP service-provider-two 172.16.28.1:8212 register finished
+2023-12-27 16:46:39.545 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - received push data: {"type":"dom","data":"{\"name\":\"DEFAULT_GROUP@@service-provider-two\",\"clusters\":\"DEFAULT\",\"cacheMillis\":10000,\"hosts\":[],\"lastRefTime\":1703666799541,\"checksum\":\"\",\"allIPs\":false,\"reachProtectionThreshold\":false,\"valid\":true}","lastRefTime":276009303882800} from /192.168.21.80
+2023-12-27 16:46:40.070 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=64829&clusters=DEFAULT, body: {}
+2023-12-27 16:46:40.350 [main] [] INFO  org.springframework.cloud.commons.util.InetUtils - Cannot determine local hostname
+2023-12-27 16:46:40.367 [main] [] INFO  com.example.serviceprovidertwo.ServiceProviderTwoApplication - Started ServiceProviderTwoApplication in 11.607 seconds (JVM running for 12.883)
+2023-12-27 16:46:40.372 [main] [] INFO  com.alibaba.nacos.client.config.impl.ClientWorker - [fixed-127.0.0.1_8848] [subscribe] service-provider-two.yaml+DEFAULT_GROUP
+2023-12-27 16:46:40.372 [main] [] INFO  com.alibaba.nacos.client.config.impl.CacheData - [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=service-provider-two.yaml, group=DEFAULT_GROUP, cnt=1
+2023-12-27 16:46:40.373 [main] [] INFO  com.alibaba.nacos.client.config.impl.ClientWorker - [fixed-127.0.0.1_8848] [subscribe] service-provider-two-test.yaml+DEFAULT_GROUP
+2023-12-27 16:46:40.373 [main] [] INFO  com.alibaba.nacos.client.config.impl.CacheData - [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=service-provider-two-test.yaml, group=DEFAULT_GROUP, cnt=1
+2023-12-27 16:46:40.373 [main] [] INFO  com.alibaba.nacos.client.config.impl.ClientWorker - [fixed-127.0.0.1_8848] [subscribe] service-provider-two+DEFAULT_GROUP
+2023-12-27 16:46:40.373 [main] [] INFO  com.alibaba.nacos.client.config.impl.CacheData - [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=service-provider-two, group=DEFAULT_GROUP, cnt=1
+2023-12-27 16:46:40.382 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: POST, url: http://127.0.0.1:8848/nacos/v1/cs/configs/listener, body: {Listening-Configs=service-provider-two.yamlDEFAULT_GROUPservice-provider-twoDEFAULT_GROUPservice-provider-two-test.yamlDEFAULT_GROUPe19079f3ea7c3e4e3e98766a6fa144d3}
+2023-12-27 16:46:40.382 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@670d4d38]
+2023-12-27 16:46:40.384 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: POST, url: http://127.0.0.1:8848/nacos/v1/cs/configs/listener, body: {Listening-Configs=service-provider-two.yamlDEFAULT_GROUPservice-provider-twoDEFAULT_GROUPservice-provider-two-test.yamlDEFAULT_GROUPe19079f3ea7c3e4e3e98766a6fa144d3}
+2023-12-27 16:46:40.384 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@670d4d38]
+2023-12-27 16:46:40.728 [RMI TCP Connection(1)-192.168.21.80] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/operator/metrics?app=unknown&namespaceId=public, body: {}
+2023-12-27 16:46:40.731 [RMI TCP Connection(2)-192.168.21.80] [] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-12-27 16:46:40.731 [RMI TCP Connection(2)-192.168.21.80] [] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-12-27 16:46:40.733 [RMI TCP Connection(2)-192.168.21.80] [] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2023-12-27 16:46:40.739 [RMI TCP Connection(1)-192.168.21.80] [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-12-27 16:46:40.741 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - received push data: {"type":"dom","data":"{\"name\":\"DEFAULT_GROUP@@service-provider-two\",\"clusters\":\"DEFAULT\",\"cacheMillis\":10000,\"hosts\":[{\"instanceId\":\"172.16.28.1#8212#DEFAULT#DEFAULT_GROUP@@service-provider-two\",\"ip\":\"172.16.28.1\",\"port\":8212,\"weight\":1.0,\"healthy\":true,\"enabled\":true,\"ephemeral\":true,\"clusterName\":\"DEFAULT\",\"serviceName\":\"DEFAULT_GROUP@@service-provider-two\",\"metadata\":{\"preserved.register.source\":\"SPRING_CLOUD\"},\"instanceHeartBeatInterval\":5000,\"instanceHeartBeatTimeOut\":15000,\"ipDeleteTimeout\":30000}],\"lastRefTime\":1703666800740,\"checksum\":\"\",\"allIPs\":false,\"reachProtectionThreshold\":false,\"valid\":true}","lastRefTime":276010502445600} from /192.168.21.80
+2023-12-27 16:46:40.751 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - new ips(1) service: DEFAULT_GROUP@@service-provider-two@@DEFAULT -> [{"instanceId":"172.16.28.1#8212#DEFAULT#DEFAULT_GROUP@@service-provider-two","ip":"172.16.28.1","port":8212,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@service-provider-two","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+2023-12-27 16:46:40.751 [nacos.publisher-com.alibaba.nacos.client.naming.event.InstancesChangeEvent] [] DEBUG com.alibaba.nacos.common.notify.NotifyCenter - [NotifyCenter] the com.alibaba.nacos.client.naming.event.InstancesChangeEvent@3ed77020 will received by com.alibaba.nacos.client.naming.event.InstancesChangeNotifier@1ce6a9bd
+2023-12-27 16:46:40.754 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - current ips:(1) service: DEFAULT_GROUP@@service-provider-two@@DEFAULT -> [{"instanceId":"172.16.28.1#8212#DEFAULT#DEFAULT_GROUP@@service-provider-two","ip":"172.16.28.1","port":8212,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@service-provider-two","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+2023-12-27 16:46:40.832 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:46:41.157 [RMI TCP Connection(1)-192.168.21.80] [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-12-27 16:46:41.166 [RMI TCP Connection(1)-192.168.21.80] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/service/list?app=unknown&pageSize=2147483647&groupName=DEFAULT_GROUP&namespaceId=public&pageNo=1, body: {}
+2023-12-27 16:46:42.074 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=64829&clusters=DEFAULT, body: {}
+2023-12-27 16:46:44.090 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 16:46:44.091 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {beat={"port":8212,"ip":"172.16.28.1","weight":1.0,"serviceName":"DEFAULT_GROUP@@service-provider-two","cluster":"DEFAULT","metadata":{"preserved.register.source":"SPRING_CLOUD"},"scheduled":false,"period":5000,"stopped":false}}
+2023-12-27 16:46:45.841 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:46:49.123 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 16:46:49.123 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 16:46:50.848 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:46:52.081 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=64829&clusters=DEFAULT, body: {}
+2023-12-27 16:46:54.140 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 16:46:54.141 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 16:46:55.863 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:46:59.168 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 16:46:59.169 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 16:47:00.871 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:47:02.097 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=64829&clusters=DEFAULT, body: {}
+2023-12-27 16:47:04.190 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 16:47:04.190 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 16:47:05.838 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - server list provided by user: [127.0.0.1:8848]
+2023-12-27 16:47:05.884 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:47:09.212 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 16:47:09.212 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 16:47:10.100 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: POST, url: http://127.0.0.1:8848/nacos/v1/cs/configs/listener, body: {Listening-Configs=service-provider-two.yamlDEFAULT_GROUPservice-provider-twoDEFAULT_GROUPservice-provider-two-test.yamlDEFAULT_GROUPe19079f3ea7c3e4e3e98766a6fa144d3}
+2023-12-27 16:47:10.101 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@670d4d38]
+2023-12-27 16:47:10.892 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:47:11.620 [http-nio-8212-exec-1] [23999dcaee84baa7] INFO  com.example.serviceprovidertwo.aop.LoggerAspectj - 【环绕增强中的--->前置增强】：the method 【getDemoProductList】 begins with [DemoProductRequest(id=null, guid=null, productName=null, productStyle=null, imagePath=null, createTime=null, modifyTime=null, status=null, description=null, timestamp=null)]
+2023-12-27 16:47:12.112 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=64829&clusters=DEFAULT, body: {}
+2023-12-27 16:47:13.262 [http-nio-8212-exec-1] [23999dcaee84baa7] INFO  com.example.serviceprovidertwo.aop.LoggerAspectj - 【环绕增强中的--->返回增强】：the method 【getDemoProductList】 ends with org.fancky.model.response.MessageResult@22ef004e
+2023-12-27 16:47:13.262 [http-nio-8212-exec-1] [23999dcaee84baa7] INFO  com.example.serviceprovidertwo.aop.LoggerAspectj - 【环绕增强中的--->后置增强】：-----------------end.----------------------
+2023-12-27 16:47:14.225 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 16:47:14.225 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 16:47:15.893 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:47:18.037 [Thread-27] [] WARN  com.alibaba.nacos.common.notify.NotifyCenter - [NotifyCenter] Start destroying Publisher
+2023-12-27 16:47:18.037 [Thread-6] [] WARN  com.alibaba.nacos.common.http.HttpClientBeanHolder - [HttpClientBeanHolder] Start destroying common HttpClient
+2023-12-27 16:47:18.037 [Thread-27] [] WARN  com.alibaba.nacos.common.notify.NotifyCenter - [NotifyCenter] Destruction of the end
+2023-12-27 16:47:18.037 [Thread-6] [] WARN  com.alibaba.nacos.common.http.HttpClientBeanHolder - [HttpClientBeanHolder] Destruction of the end
+2023-12-27 16:47:18.638 [SpringApplicationShutdownHook] [] INFO  com.alibaba.cloud.nacos.registry.NacosServiceRegistry - De-registering from Nacos Server now...
+2023-12-27 16:47:18.648 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - [BEAT] removing beat: DEFAULT_GROUP@@service-provider-two:172.16.28.1:8212 from beat map.
+2023-12-27 16:47:18.648 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - [DEREGISTER-SERVICE] public deregistering service DEFAULT_GROUP@@service-provider-two with instance: Instance{instanceId='null', ip='172.16.28.1', port=8212, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={}}
+2023-12-27 16:47:18.648 [SpringApplicationShutdownHook] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: DELETE, url: http://127.0.0.1:8848/nacos/v1/ns/instance?app=unknown&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1&ephemeral=true&serviceName=DEFAULT_GROUP%40%40service-provider-two, body: {}
+2023-12-27 16:47:18.658 [SpringApplicationShutdownHook] [] INFO  com.alibaba.cloud.nacos.registry.NacosServiceRegistry - De-registration finished.
+2023-12-27 16:47:18.658 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.beat.BeatReactor do shutdown begin
+2023-12-27 16:47:19.239 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.beat.BeatReactor do shutdown stop
+2023-12-27 16:47:19.239 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.core.HostReactor do shutdown begin
+2023-12-27 16:47:20.231 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - received push data: {"type":"dom","data":"{\"name\":\"DEFAULT_GROUP@@service-provider-two\",\"clusters\":\"DEFAULT\",\"cacheMillis\":10000,\"hosts\":[],\"lastRefTime\":1703666840231,\"checksum\":\"\",\"allIPs\":false,\"reachProtectionThreshold\":false,\"valid\":true}","lastRefTime":276049994152600} from /192.168.21.80
+2023-12-27 16:47:20.231 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - removed ips(1) service: DEFAULT_GROUP@@service-provider-two@@DEFAULT -> [{"instanceId":"172.16.28.1#8212#DEFAULT#DEFAULT_GROUP@@service-provider-two","ip":"172.16.28.1","port":8212,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@service-provider-two","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+2023-12-27 16:47:20.231 [nacos.publisher-com.alibaba.nacos.client.naming.event.InstancesChangeEvent] [] DEBUG com.alibaba.nacos.common.notify.NotifyCenter - [NotifyCenter] the com.alibaba.nacos.client.naming.event.InstancesChangeEvent@335318f9 will received by com.alibaba.nacos.client.naming.event.InstancesChangeNotifier@1ce6a9bd
+2023-12-27 16:47:20.231 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - current ips:(0) service: DEFAULT_GROUP@@service-provider-two@@DEFAULT -> []
+2023-12-27 16:47:20.902 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 16:47:22.125 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=64829&clusters=DEFAULT, body: {}
+2023-12-27 16:47:22.132 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.core.PushReceiver do shutdown begin
+2023-12-27 16:47:25.166 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.core.PushReceiver do shutdown stop
+2023-12-27 16:47:25.167 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.backups.FailoverReactor do shutdown begin
+2023-12-27 16:47:25.167 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.backups.FailoverReactor do shutdown stop
+2023-12-27 16:47:25.168 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.core.HostReactor do shutdown stop
+2023-12-27 16:47:25.168 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.net.NamingProxy do shutdown begin
+2023-12-27 16:47:25.169 [SpringApplicationShutdownHook] [] WARN  com.alibaba.nacos.client.naming - [NamingHttpClientManager] Start destroying NacosRestTemplate
+2023-12-27 16:47:25.169 [SpringApplicationShutdownHook] [] WARN  com.alibaba.nacos.client.naming - [NamingHttpClientManager] Destruction of the end
+2023-12-27 16:47:25.170 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.identify.CredentialWatcher - [null] CredentialWatcher is stopped
+2023-12-27 16:47:25.170 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.identify.CredentialService - [null] CredentialService is freed
+2023-12-27 16:47:25.170 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.net.NamingProxy do shutdown stop
+2023-12-27 16:47:25.173 [SpringApplicationShutdownHook] [] WARN  org.springframework.beans.factory.support.DisposableBeanAdapter - Custom destroy method 'close' on bean with name 'nacosServiceRegistry' threw an exception: java.lang.NullPointerException
+2023-12-27 16:47:25.175 [SpringApplicationShutdownHook] [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-12-27 16:47:25.181 [SpringApplicationShutdownHook] [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-12-27 16:47:25.183 [SpringApplicationShutdownHook] [] DEBUG reactor.core.publisher.Hooks - Reset onEachOperator: org.springframework.cloud.sleuth.autoconfig.instrument.reactor.TraceReactorAutoConfiguration$TraceReactorConfiguration
+2023-12-27 16:47:25.183 [SpringApplicationShutdownHook] [] DEBUG reactor.core.publisher.Hooks - Reset onLastOperator: org.springframework.cloud.sleuth.autoconfig.instrument.reactor.TraceReactorAutoConfiguration$TraceReactorConfiguration
+2023-12-27 17:05:01.415 [main] [] INFO  com.alibaba.nacos.client.config.impl.LocalConfigInfoProcessor - LOCAL_SNAPSHOT_PATH:C:\Users\lirui\nacos\config
+2023-12-27 17:05:01.429 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=service-provider-two&group=DEFAULT_GROUP, body: null
+2023-12-27 17:05:01.429 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@2e060819]
+2023-12-27 17:05:01.447 [main] [] INFO  com.alibaba.nacos.client.config.impl.Limiter - limitTime:5.0
+2023-12-27 17:05:01.477 [main] [] WARN  com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder - Ignore the empty nacos configuration and get it based on dataId[service-provider-two] & group[DEFAULT_GROUP]
+2023-12-27 17:05:01.478 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=service-provider-two.yaml&group=DEFAULT_GROUP, body: null
+2023-12-27 17:05:01.478 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@2e060819]
+2023-12-27 17:05:01.482 [main] [] WARN  com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder - Ignore the empty nacos configuration and get it based on dataId[service-provider-two.yaml] & group[DEFAULT_GROUP]
+2023-12-27 17:05:01.482 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=service-provider-two-test.yaml&group=DEFAULT_GROUP, body: null
+2023-12-27 17:05:01.482 [main] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@2e060819]
+2023-12-27 17:05:01.486 [main] [] INFO  com.alibaba.nacos.client.config.utils.JvmUtil - isMultiInstance:false
+2023-12-27 17:05:01.488 [main] [] DEBUG com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder - Loading nacos data, dataId: 'service-provider-two-test.yaml', group: 'DEFAULT_GROUP', data: server:
+  port: 8212
+spring:
+  application:
+    name: service-provider-two  #service-provider-one nacos将服务服务注册中心，默认采用应用程序名称。如果两个服务名称一样，网关会采用负载均衡。默认轮训
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+#        metadata:  #以下是springbootadmin的配置
+#          management:
+#            context-path: '${server.servlet.context-path}/actuator'
+  datasource:
+    #mysql
+    #具体参见类DynamicDataSourceAspect 说明
+    #不用此默认，默认就是写库,多数据源用jdbcUrl，不是url,spring 默认用的是url，用多数据源用url会报错。
+    url: jdbc:mysql://127.0.0.1:3306/demo?useUnicode=true&characterEncoding=utf8&useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&allowMultiQueries=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+
+    # HikariCP： springboot2.0 默认的连接池。https://github.com/brettwooldridge/HikariCP
+    #HikariCP  高并发性能优。mysql 8h 空闲断开连接可用quartz 调度定期select 1  。
+    #产生此问题DB工作就不繁忙，性能要求不高。可以用上面dbcp2的配置，采取空闲查询策略。
+    #要引入mybatis
+    type: com.zaxxer.hikari.HikariDataSource
+    # Hikari will use the above plus the following to setup connection pooling
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 100
+      auto-commit: true #OrderManagerService 代码异常，spring自动回滚，或者手动回滚。否则正常自动提交
+      idle-timeout: 60000
+      #pool-name: HikariCP-Demo
+      max-lifetime: 1800000
+      connection-timeout: 600000
+      #connection-test-query: SELECT 1
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+
+#mybatis 配置和mybatis-plus不一样，springbootstarter的myabtis 版本要和mybatis-plus封装的mybatis版本保持一直，
+#否则项目中同时存在的myabtis 和mybatis0plus因引用的mybatis版本不一致无法共存。
+#mybatis:
+
+#配置日志  打印sql语句
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+##mybatis 分页 pageHelper插件4.0.0以后的版本支持自动识别使用的数据库
+#pagehelper:
+#  ##  mysql、sqlserver2012，没找到sqlserver2008版本的
+#  helperDialect: sqlserver2012
+#  reasonable: true
+#  supportMethodsArguments: true
+#  params: count=countSql
+2023-12-27 17:05:01.493 [main] [] INFO  org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration - Located property source: [BootstrapPropertySource {name='bootstrapProperties-service-provider-two-test.yaml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-service-provider-two.yaml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-service-provider-two,DEFAULT_GROUP'}]
+2023-12-27 17:05:01.519 [main] [] INFO  com.example.serviceprovidertwo.ServiceProviderTwoApplication - The following 1 profile is active: "test"
+2023-12-27 17:05:02.158 [main] [] DEBUG com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration - Searching for mappers annotated with @Mapper
+2023-12-27 17:05:02.158 [main] [] DEBUG com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration - Using auto-configuration base package 'com.example.serviceprovidertwo'
+2023-12-27 17:05:02.508 [main] [] DEBUG org.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+2023-12-27 17:05:02.703 [main] [] INFO  org.springframework.cloud.context.scope.GenericScope - BeanFactory id=5ecbdd8d-2f36-3d40-934c-4ffd96734233
+2023-12-27 17:05:02.751 [main] [] DEBUG reactor.util.Loggers - Using Slf4j logging framework
+2023-12-27 17:05:02.753 [main] [] DEBUG reactor.core.publisher.Hooks - Hooking onEachOperator: org.springframework.cloud.sleuth.autoconfig.instrument.reactor.TraceReactorAutoConfiguration$TraceReactorConfiguration
+2023-12-27 17:05:02.753 [main] [] DEBUG reactor.core.publisher.Hooks - Hooking onLastOperator: org.springframework.cloud.sleuth.autoconfig.instrument.reactor.TraceReactorAutoConfiguration$TraceReactorConfiguration
+2023-12-27 17:05:03.219 [main] [] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8212 (http)
+2023-12-27 17:05:03.226 [main] [] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8212"]
+2023-12-27 17:05:03.227 [main] [] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-12-27 17:05:03.227 [main] [] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2023-12-27 17:05:03.356 [main] [] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-12-27 17:05:03.357 [main] [] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1824 ms
+2023-12-27 17:05:03.423 [main] [] DEBUG io.micrometer.core.util.internal.logging.InternalLoggerFactory - Using SLF4J as the default logging framework
+2023-12-27 17:05:03.511 [main] [] WARN  com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
+2023-12-27 17:05:03.511 [main] [] INFO  com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2023-12-27 17:05:03.514 [main] [] DEBUG com.netflix.hystrix.strategy.HystrixPlugins - Created HystrixDynamicProperties. Using class : com.netflix.hystrix.strategy.properties.archaius.HystrixDynamicPropertiesArchaius
+2023-12-27 17:05:03.519 [main] [] INFO  com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@62360a68
+2023-12-27 17:05:05.310 [main] [] INFO  org.springframework.cloud.commons.util.InetUtils - Cannot determine local hostname
+2023-12-27 17:05:05.321 [main] [] INFO  com.alibaba.nacos.client.naming - initializer namespace from System Property :null
+2023-12-27 17:05:05.322 [main] [] INFO  com.alibaba.nacos.client.naming - initializer namespace from System Environment :null
+2023-12-27 17:05:05.322 [main] [] INFO  com.alibaba.nacos.client.naming - initializer namespace from System Property :null
+2023-12-27 17:05:05.328 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - server list provided by user: [127.0.0.1:8848]
+2023-12-27 17:05:05.328 [main] [] DEBUG com.alibaba.nacos.client.naming - server list provided by user: [127.0.0.1:8848]
+2023-12-27 17:05:05.331 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 17:05:05.718 [main] [] DEBUG com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean - Parsed mapper file: 'file [D:\work\project\git\java\spring-cloud-nacos\service-provider-two\target\classes\mapper\DemoProductMapper.xml]'
+2023-12-27 17:05:06.021 [main] [] WARN  com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
+2023-12-27 17:05:06.021 [main] [] INFO  com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2023-12-27 17:05:06.309 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	c.e.s.c.DemoProductController:
+	{GET [/api/demoProduct/getDemoProductList]}: getDemoProductList(DemoProductRequest)
+	{POST [/api/demoProduct/addDemoProductList]}: addDemoProductList(DemoProductRequest)
+2023-12-27 17:05:06.313 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	c.e.s.c.TestController:
+	{POST [/test/add]}: add(Student)
+	{GET [/test/configName]}: configName(String)
+	{GET [/test/helloWorld]}: helloWorld(String)
+2023-12-27 17:05:06.314 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	o.s.b.a.w.s.e.BasicErrorController:
+	{ [/error]}: error(HttpServletRequest)
+	{ [/error], produces [text/html]}: errorHtml(HttpServletRequest,HttpServletResponse)
+2023-12-27 17:05:06.326 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	o.s.w.a.OpenApiWebMvcResource:
+	{GET [/v3/api-docs.yaml], produces [application/vnd.oai.openapi]}: openapiYaml(HttpServletRequest,String,Locale)
+	{GET [/v3/api-docs], produces [application/json]}: openapiJson(HttpServletRequest,String,Locale)
+2023-12-27 17:05:06.327 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	{GET [/swagger-ui.html]}: redirectToUi(HttpServletRequest)
+2023-12-27 17:05:06.328 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+	o.s.w.u.SwaggerConfigResource:
+	{GET [/v3/api-docs/swagger-config], produces [application/json]}: openapiJson(HttpServletRequest)
+2023-12-27 17:05:06.344 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 'beanNameHandlerMapping' {}
+2023-12-27 17:05:06.362 [main] [] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 'resourceHandlerMapping' {/webjars/**=ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/]], /**=ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]], /swagger-ui*/*swagger-initializer.js=ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/]], /swagger-ui*/**=ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/]]}
+2023-12-27 17:05:06.418 [main] [] DEBUG com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration - Not found configuration for registering mapper bean using @MapperScan, MapperFactoryBean and MapperScannerConfigurer.
+2023-12-27 17:05:08.127 [main] [] INFO  org.springframework.cloud.commons.util.InetUtils - Cannot determine local hostname
+2023-12-27 17:05:08.328 [main] [] WARN  org.springframework.cloud.loadbalancer.config.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2023-12-27 17:05:08.421 [main] [] INFO  org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver - Exposing 20 endpoint(s) beneath base path '/actuator'
+2023-12-27 17:05:08.493 [main] [] DEBUG com.alibaba.nacos.client.naming - failover-mode: false
+2023-12-27 17:05:08.494 [main] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=50856&clusters=DEFAULT, body: {}
+2023-12-27 17:05:08.769 [main] [] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8212"]
+2023-12-27 17:05:08.789 [main] [] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8212 (http) with context path ''
+2023-12-27 17:05:08.793 [main] [] INFO  com.alibaba.nacos.client.naming - [BEAT] adding beat: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false} to beat map.
+2023-12-27 17:05:08.794 [main] [] INFO  com.alibaba.nacos.client.naming - [REGISTER-SERVICE] public registering service DEFAULT_GROUP@@service-provider-two with instance: Instance{instanceId='null', ip='172.16.28.1', port=8212, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+2023-12-27 17:05:08.796 [main] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: POST, url: http://127.0.0.1:8848/nacos/v1/ns/instance?app=unknown&groupName=DEFAULT_GROUP&metadata=%7B%22preserved.register.source%22%3A%22SPRING_CLOUD%22%7D&namespaceId=public&port=8212&enable=true&healthy=true&clusterName=DEFAULT&ip=172.16.28.1&weight=1.0&ephemeral=true&serviceName=DEFAULT_GROUP%40%40service-provider-two, body: {}
+2023-12-27 17:05:08.803 [main] [] INFO  com.alibaba.cloud.nacos.registry.NacosServiceRegistry - nacos registry, DEFAULT_GROUP service-provider-two 172.16.28.1:8212 register finished
+2023-12-27 17:05:09.272 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - received push data: {"type":"dom","data":"{\"name\":\"DEFAULT_GROUP@@service-provider-two\",\"clusters\":\"DEFAULT\",\"cacheMillis\":10000,\"hosts\":[],\"lastRefTime\":1703667909270,\"checksum\":\"\",\"allIPs\":false,\"reachProtectionThreshold\":false,\"valid\":true}","lastRefTime":277119032865000} from /192.168.21.80
+2023-12-27 17:05:09.781 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=50856&clusters=DEFAULT, body: {}
+2023-12-27 17:05:09.800 [com.alibaba.nacos.client.naming.updater] [] INFO  com.alibaba.nacos.client.naming - new ips(1) service: DEFAULT_GROUP@@service-provider-two@@DEFAULT -> [{"instanceId":"172.16.28.1#8212#DEFAULT#DEFAULT_GROUP@@service-provider-two","ip":"172.16.28.1","port":8212,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@service-provider-two","metadata":{"preserved.register.source":"SPRING_CLOUD"},"instanceHeartBeatTimeOut":15000,"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000}]
+2023-12-27 17:05:09.800 [nacos.publisher-com.alibaba.nacos.client.naming.event.InstancesChangeEvent] [] DEBUG com.alibaba.nacos.common.notify.NotifyCenter - [NotifyCenter] the com.alibaba.nacos.client.naming.event.InstancesChangeEvent@37db2778 will received by com.alibaba.nacos.client.naming.event.InstancesChangeNotifier@3b42b729
+2023-12-27 17:05:09.806 [com.alibaba.nacos.client.naming.updater] [] INFO  com.alibaba.nacos.client.naming - current ips:(1) service: DEFAULT_GROUP@@service-provider-two@@DEFAULT -> [{"instanceId":"172.16.28.1#8212#DEFAULT#DEFAULT_GROUP@@service-provider-two","ip":"172.16.28.1","port":8212,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@service-provider-two","metadata":{"preserved.register.source":"SPRING_CLOUD"},"instanceHeartBeatTimeOut":15000,"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000}]
+2023-12-27 17:05:09.921 [com.alibaba.nacos.naming.push.receiver] [] INFO  com.alibaba.nacos.client.naming - received push data: {"type":"dom","data":"{\"name\":\"DEFAULT_GROUP@@service-provider-two\",\"clusters\":\"DEFAULT\",\"cacheMillis\":10000,\"hosts\":[{\"instanceId\":\"172.16.28.1#8212#DEFAULT#DEFAULT_GROUP@@service-provider-two\",\"ip\":\"172.16.28.1\",\"port\":8212,\"weight\":1.0,\"healthy\":true,\"enabled\":true,\"ephemeral\":true,\"clusterName\":\"DEFAULT\",\"serviceName\":\"DEFAULT_GROUP@@service-provider-two\",\"metadata\":{\"preserved.register.source\":\"SPRING_CLOUD\"},\"instanceHeartBeatInterval\":5000,\"instanceHeartBeatTimeOut\":15000,\"ipDeleteTimeout\":30000}],\"lastRefTime\":1703667909920,\"checksum\":\"\",\"allIPs\":false,\"reachProtectionThreshold\":false,\"valid\":true}","lastRefTime":277119682824200} from /192.168.21.80
+2023-12-27 17:05:10.075 [main] [] INFO  org.springframework.cloud.commons.util.InetUtils - Cannot determine local hostname
+2023-12-27 17:05:10.093 [main] [] INFO  com.example.serviceprovidertwo.ServiceProviderTwoApplication - Started ServiceProviderTwoApplication in 12.037 seconds (JVM running for 13.214)
+2023-12-27 17:05:10.100 [main] [] INFO  com.alibaba.nacos.client.config.impl.ClientWorker - [fixed-127.0.0.1_8848] [subscribe] service-provider-two.yaml+DEFAULT_GROUP
+2023-12-27 17:05:10.101 [main] [] INFO  com.alibaba.nacos.client.config.impl.CacheData - [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=service-provider-two.yaml, group=DEFAULT_GROUP, cnt=1
+2023-12-27 17:05:10.101 [main] [] INFO  com.alibaba.nacos.client.config.impl.ClientWorker - [fixed-127.0.0.1_8848] [subscribe] service-provider-two-test.yaml+DEFAULT_GROUP
+2023-12-27 17:05:10.101 [main] [] INFO  com.alibaba.nacos.client.config.impl.CacheData - [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=service-provider-two-test.yaml, group=DEFAULT_GROUP, cnt=1
+2023-12-27 17:05:10.101 [main] [] INFO  com.alibaba.nacos.client.config.impl.ClientWorker - [fixed-127.0.0.1_8848] [subscribe] service-provider-two+DEFAULT_GROUP
+2023-12-27 17:05:10.101 [main] [] INFO  com.alibaba.nacos.client.config.impl.CacheData - [fixed-127.0.0.1_8848] [add-listener] ok, tenant=, dataId=service-provider-two, group=DEFAULT_GROUP, cnt=1
+2023-12-27 17:05:10.108 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: POST, url: http://127.0.0.1:8848/nacos/v1/cs/configs/listener, body: {Listening-Configs=service-provider-two.yamlDEFAULT_GROUPservice-provider-twoDEFAULT_GROUPservice-provider-two-test.yamlDEFAULT_GROUPe19079f3ea7c3e4e3e98766a6fa144d3}
+2023-12-27 17:05:10.108 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@2e060819]
+2023-12-27 17:05:10.111 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: POST, url: http://127.0.0.1:8848/nacos/v1/cs/configs/listener, body: {Listening-Configs=service-provider-two.yamlDEFAULT_GROUPservice-provider-twoDEFAULT_GROUPservice-provider-two-test.yamlDEFAULT_GROUPe19079f3ea7c3e4e3e98766a6fa144d3}
+2023-12-27 17:05:10.111 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@2e060819]
+2023-12-27 17:05:10.339 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 17:05:10.583 [RMI TCP Connection(2)-192.168.21.80] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/operator/metrics?app=unknown&namespaceId=public, body: {}
+2023-12-27 17:05:10.587 [RMI TCP Connection(1)-192.168.21.80] [] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-12-27 17:05:10.588 [RMI TCP Connection(1)-192.168.21.80] [] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-12-27 17:05:10.590 [RMI TCP Connection(1)-192.168.21.80] [] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2023-12-27 17:05:10.593 [RMI TCP Connection(2)-192.168.21.80] [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-12-27 17:05:11.063 [RMI TCP Connection(2)-192.168.21.80] [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-12-27 17:05:11.077 [RMI TCP Connection(2)-192.168.21.80] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/service/list?app=unknown&pageSize=2147483647&groupName=DEFAULT_GROUP&namespaceId=public&pageNo=1, body: {}
+2023-12-27 17:05:13.799 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 17:05:13.801 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {beat={"port":8212,"ip":"172.16.28.1","weight":1.0,"serviceName":"DEFAULT_GROUP@@service-provider-two","cluster":"DEFAULT","metadata":{"preserved.register.source":"SPRING_CLOUD"},"scheduled":false,"period":5000,"stopped":false}}
+2023-12-27 17:05:15.346 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 17:05:18.815 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 17:05:18.815 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 17:05:19.819 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=50856&clusters=DEFAULT, body: {}
+2023-12-27 17:05:20.350 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 17:05:23.822 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 17:05:23.822 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 17:05:25.358 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 17:05:28.842 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 17:05:28.842 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 17:05:29.837 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=50856&clusters=DEFAULT, body: {}
+2023-12-27 17:05:30.364 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 17:05:33.867 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 17:05:33.867 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 17:05:35.339 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - server list provided by user: [127.0.0.1:8848]
+2023-12-27 17:05:35.370 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 17:05:37.818 [http-nio-8212-exec-2] [dd42ae72e10c8775] INFO  com.example.serviceprovidertwo.aop.LoggerAspectj - 【环绕增强中的--->前置增强】：the method 【getDemoProductList】 begins with [DemoProductRequest(id=null, guid=null, productName=null, productStyle=null, imagePath=null, createTime=null, modifyTime=null, status=null, description=null, timestamp=null)]
+2023-12-27 17:05:44.788 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - [BEAT] public sending beat to server: BeatInfo{port=8212, ip='172.16.28.1', weight=1.0, serviceName='DEFAULT_GROUP@@service-provider-two', cluster='DEFAULT', metadata={preserved.register.source=SPRING_CLOUD}, scheduled=false, period=5000, stopped=false}
+2023-12-27 17:05:44.788 [com.alibaba.nacos.naming.failover] [] DEBUG com.alibaba.nacos.client.naming - failover switch is not found, failover00-00---000-VIPSRV_FAILOVER_SWITCH-000---00-00
+2023-12-27 17:05:44.789 [com.alibaba.nacos.client.naming.updater] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: GET, url: http://127.0.0.1:8848/nacos/v1/ns/instance/list?app=unknown&healthyOnly=false&namespaceId=public&clientIP=192.168.21.80&serviceName=DEFAULT_GROUP%40%40service-provider-two&udpPort=50856&clusters=DEFAULT, body: {}
+2023-12-27 17:05:44.789 [com.alibaba.nacos.naming.beat.sender] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: PUT, url: http://127.0.0.1:8848/nacos/v1/ns/instance/beat?app=unknown&serviceName=DEFAULT_GROUP%40%40service-provider-two&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1, body: {}
+2023-12-27 17:05:44.789 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - HTTP method: POST, url: http://127.0.0.1:8848/nacos/v1/cs/configs/listener, body: {Listening-Configs=service-provider-two.yamlDEFAULT_GROUPservice-provider-twoDEFAULT_GROUPservice-provider-two-test.yamlDEFAULT_GROUPe19079f3ea7c3e4e3e98766a6fa144d3}
+2023-12-27 17:05:44.789 [com.alibaba.nacos.client.Worker.longPolling.fixed-127.0.0.1_8848] [] DEBUG com.alibaba.nacos.client.config.impl.ConfigHttpClientManager - Execute via interceptors :[com.alibaba.nacos.client.config.impl.ConfigHttpClientManager$LimiterHttpClientRequestInterceptor@2e060819]
+2023-12-27 17:05:44.846 [Thread-6] [] WARN  com.alibaba.nacos.common.http.HttpClientBeanHolder - [HttpClientBeanHolder] Start destroying common HttpClient
+2023-12-27 17:05:44.846 [Thread-28] [] WARN  com.alibaba.nacos.common.notify.NotifyCenter - [NotifyCenter] Start destroying Publisher
+2023-12-27 17:05:44.846 [Thread-28] [] WARN  com.alibaba.nacos.common.notify.NotifyCenter - [NotifyCenter] Destruction of the end
+2023-12-27 17:05:44.846 [Thread-6] [] WARN  com.alibaba.nacos.common.http.HttpClientBeanHolder - [HttpClientBeanHolder] Destruction of the end
+2023-12-27 17:05:45.904 [http-nio-8212-exec-2] [dd42ae72e10c8775] INFO  com.example.serviceprovidertwo.aop.LoggerAspectj - 【环绕增强中的--->返回增强】：the method 【getDemoProductList】 ends with org.fancky.model.response.MessageResult@2bf69bee
+2023-12-27 17:05:45.904 [http-nio-8212-exec-2] [dd42ae72e10c8775] INFO  com.example.serviceprovidertwo.aop.LoggerAspectj - 【环绕增强中的--->后置增强】：-----------------end.----------------------
+2023-12-27 17:05:46.011 [SpringApplicationShutdownHook] [] INFO  com.alibaba.cloud.nacos.registry.NacosServiceRegistry - De-registering from Nacos Server now...
+2023-12-27 17:05:46.011 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - [BEAT] removing beat: DEFAULT_GROUP@@service-provider-two:172.16.28.1:8212 from beat map.
+2023-12-27 17:05:46.011 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - [DEREGISTER-SERVICE] public deregistering service DEFAULT_GROUP@@service-provider-two with instance: Instance{instanceId='null', ip='172.16.28.1', port=8212, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={}}
+2023-12-27 17:05:46.011 [SpringApplicationShutdownHook] [] DEBUG com.alibaba.nacos.client.naming - HTTP method: DELETE, url: http://127.0.0.1:8848/nacos/v1/ns/instance?app=unknown&namespaceId=public&port=8212&clusterName=DEFAULT&ip=172.16.28.1&ephemeral=true&serviceName=DEFAULT_GROUP%40%40service-provider-two, body: {}
+2023-12-27 17:05:46.018 [SpringApplicationShutdownHook] [] INFO  com.alibaba.cloud.nacos.registry.NacosServiceRegistry - De-registration finished.
+2023-12-27 17:05:46.018 [SpringApplicationShutdownHook] [] INFO  com.alibaba.nacos.client.naming - com.alibaba.nacos.client.naming.beat.BeatReactor do shutdown begin

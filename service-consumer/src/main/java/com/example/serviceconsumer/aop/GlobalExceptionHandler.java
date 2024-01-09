@@ -1,9 +1,8 @@
 package com.example.serviceconsumer.aop;
 
-
-import com.example.serviceconsumer.model.MessageResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.fancky.model.response.MessageResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
