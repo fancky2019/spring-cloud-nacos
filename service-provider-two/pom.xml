@@ -68,9 +68,23 @@
             <version>${jsqlparser.version}</version>
         </dependency>
 
+        <!--Redis依赖-->
+        		<dependency>
+        			<groupId>org.springframework.boot</groupId>
+        			<artifactId>spring-boot-starter-data-redis</artifactId>
+        		</dependency>
+        <!--lettuce 依赖  对象池-->
+        		<dependency>
+        			<groupId>org.apache.commons</groupId>
+        			<artifactId>commons-pool2</artifactId>
+        		</dependency>
 
-
-
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
+        		<dependency>
+        			<groupId>org.redisson</groupId>
+        			<artifactId>redisson-spring-boot-starter</artifactId>
+        			<version>${redisson.version}</version>
+        		</dependency>
 
 
         <dependency>
@@ -81,13 +95,14 @@
 
     </dependencies>
 
-    <!--	<build>-->
-    <!--		<plugins>-->
-    <!--			<plugin>-->
-    <!--				<groupId>org.springframework.boot</groupId>-->
-    <!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
-    <!--			</plugin>-->
-    <!--		</plugins>-->
-    <!--	</build>-->
+<!--    父pom 设置-->
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 
 </project>

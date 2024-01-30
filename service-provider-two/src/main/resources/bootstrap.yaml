@@ -1,3 +1,4 @@
+#bootstrap.yml 先于 application.yml 加载
 spring:
   profiles:
     active: test  #${spring.profile.active}

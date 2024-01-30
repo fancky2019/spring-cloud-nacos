@@ -3,8 +3,9 @@
 
 <configuration status="WARN" monitorInterval="30">
     <Properties>
-
-        <Property name="springAppName">${bundle:application:spring.application.name}</Property>
+        <Property name="springAppName">service-consumer</Property>
+<!--        报错 不成功-->
+<!--        <Property name="springAppName">${bundle:application:spring.application.name}</Property>-->
 <!--        <Property name="sleuthInfo">${springAppName},%X{X-B3-TraceId}</Property>-->
 
 

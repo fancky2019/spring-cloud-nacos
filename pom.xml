@@ -6,7 +6,10 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 <!--		不赞成在设置属性，应设置具体版本。 报红不影响，可以设置idea不让它报红-->
-		<version>${spring-boot.version}</version>
+<!--		<version>${spring-boot.version}</version>-->
+<!--		需要常量,不能设置变量,打包报错-->
+		<version>2.7.18</version>
+
         <!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
 
@@ -15,7 +18,10 @@
 
 	<groupId>com.fancky</groupId>
 	<artifactId>spring-cloud-nacos</artifactId>
-	<version>${project.version}</version>
+<!--	需要常量,不能设置变量-->
+<!--	<version>${project.version}</version>-->
+	<version>0.0.1-SNAPSHOT</version>
+
 	<name>spring-cloud-nacos</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -92,12 +98,20 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-			<version>2.2.9.RELEASE</version>
+			<version>2.2.10.RELEASE</version>
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
-			<version>2.2.9.RELEASE</version>
+			<version>2.2.10.RELEASE</version>
+			<exclusions>
+<!--				gateway 注入ServerCodecConfigurer 报错-->
+				<exclusion>
+					<artifactId>spring-boot-starter-web</artifactId>
+					<groupId>org.springframework.boot</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
         <!--用okhttp 代替默认的  HTTP Client，JDK 原生的 URLConnection 发送HTTP请求，没有连接池-->
@@ -123,22 +137,22 @@
         </dependency>
 
 		<!--Redis依赖-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-data-redis</artifactId>-->
+<!--		</dependency>-->
 		<!--lettuce 依赖  对象池-->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-pool2</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.apache.commons</groupId>-->
+<!--			<artifactId>commons-pool2</artifactId>-->
+<!--		</dependency>-->
 
 		<!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
-		<dependency>
-			<groupId>org.redisson</groupId>
-			<artifactId>redisson-spring-boot-starter</artifactId>
-			<version>${redisson.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.redisson</groupId>-->
+<!--			<artifactId>redisson-spring-boot-starter</artifactId>-->
+<!--			<version>${redisson.version}</version>-->
+<!--		</dependency>-->
 
 
 
@@ -229,6 +243,7 @@
 		</dependencies>
 	</dependencyManagement>
 
+<!--	common 模块没有启动类，无法打包-->
 	<build>
 		<plugins>
 			<plugin>

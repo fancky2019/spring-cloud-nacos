@@ -1,0 +1,4 @@
+#????????????ComponentScan ??
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.fancky.model.config.RedisConfig,\
+org.fancky.model.config.RedissonConfig
