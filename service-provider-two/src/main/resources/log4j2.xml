@@ -4,12 +4,15 @@
 <configuration status="WARN" monitorInterval="30">
     <Properties>
         <!--自定义一些常量，之后使用${变量名}引用-->
-
+        <Property name="springAppName">service-provider-two</Property>
         <Property name="basePath">logs/</Property>
         <Property name="logFilePath">logs/${date:yyyy-MM}/${date:yyyy-MM-dd}/</Property>
         <Property name="logFileName">test.log</Property>
 <!--        "[%d{yyyy-MM-dd HH:mm:ss:SSS}] [%p] - %m%n"-->
-        <property name="log_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{traceId}] %-5level %c{36} - %m%n</property>
+<!--       sleuth  默认启用 ，调用接口才会打 traceId,整个服务链路日志都会打印 traceID-->
+        <property name="log_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [${springAppName},%X{traceId},%X{spanId}] %-5level %c{36} - %m%n</property>
+
+<!--        <property name="log_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{traceId}] %-5level %c{36} - %m%n</property>-->
     </Properties>
 
     <appenders>

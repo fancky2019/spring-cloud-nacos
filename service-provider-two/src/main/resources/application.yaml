@@ -4,6 +4,7 @@
 #spring:
 #  application:
 #    name: service-provider-two  #service-provider-one nacos将服务服务注册中心，默认采用应用程序名称。如果两个服务名称一样，网关会采用负载均衡。默认轮训
+#
 #  cloud:
 #    nacos:
 #      discovery:
@@ -11,7 +12,12 @@
 ##        metadata:  #以下是springbootadmin的配置
 ##          management:
 ##            context-path: '${server.servlet.context-path}/actuator'
-#
+##  sleuth: #springCloud链接追踪  默认启用 ，调用接口才会打 traceId,整个服务链路日志都会打印 traceID
+##    web:
+##      client:
+##        enabled: true
+#    sampler:
+#      probability: 1.0 # 将采样比例设置为 1.0，也就是全部都需要。默认是 0.1
 #  datasource:
 #    #mysql
 #    #具体参见类DynamicDataSourceAspect 说明

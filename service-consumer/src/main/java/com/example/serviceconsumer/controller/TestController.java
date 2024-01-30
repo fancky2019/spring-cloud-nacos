@@ -2,6 +2,7 @@ package com.example.serviceconsumer.controller;
 
 import com.example.serviceconsumer.model.Student;
 import com.example.serviceconsumer.service.TestOpenFeignService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 
+@Slf4j
 @RefreshScope   //@RefreshScope 配置自动更新
 @RestController
 @RequestMapping("/test")
@@ -38,6 +40,7 @@ public class TestController {
     @GetMapping("/helloWorld")
     public String helloWorld(String hello) throws Exception {
 
+        log.info("链路跟踪测试{}",hello);
         logger.info("hello="+hello);
         String jsonStr =appName +":"+ testOpenFeignService.helloWorld("test");
         int m = 0;
