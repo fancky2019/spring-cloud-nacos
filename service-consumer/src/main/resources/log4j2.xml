@@ -4,7 +4,7 @@
 <configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="springAppName">service-consumer</Property>
-<!--        报错 不成功-->
+        <!--       Log4j2 不直接支持从 application.yaml 中获取配置。java 代码配置mdc 从mdc 中值 报错 不成功-->
 <!--        <Property name="springAppName">${bundle:application:spring.application.name}</Property>-->
 <!--        <Property name="sleuthInfo">${springAppName},%X{X-B3-TraceId}</Property>-->
 
