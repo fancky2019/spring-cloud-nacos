@@ -1,106 +1,152 @@
-#server:
-#  port: 8211
-#spring:
-#  application:
-#    name: service-provider-one  #nacos将服务服务注册中心，默认采用应用程序名称。如果两个服务名称一样，网关会采用负载均衡。默认轮训
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: 127.0.0.1:8848
-#  datasource:
-#    #mysql
-#    #具体参见类DynamicDataSourceAspect 说明
-#    #不用此默认，默认就是写库,多数据源用jdbcUrl，不是url,spring 默认用的是url，用多数据源用url会报错。
-#    url: jdbc:mysql://127.0.0.1:3306/demo?useUnicode=true&characterEncoding=utf8&useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&allowMultiQueries=true&rewriteBatchedStatements=true
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    username: root
-#    password: 123456
-#
-#    # HikariCP： springboot2.0 默认的连接池。https://github.com/brettwooldridge/HikariCP
-#    #HikariCP  高并发性能优。mysql 8h 空闲断开连接可用quartz 调度定期select 1  。
-#    #产生此问题DB工作就不繁忙，性能要求不高。可以用上面dbcp2的配置，采取空闲查询策略。
-#    #要引入mybatis
-#    type: com.zaxxer.hikari.HikariDataSource
-#    # Hikari will use the above plus the following to setup connection pooling
-#    hikari:
-#      minimum-idle: 5
-#      maximum-pool-size: 100
-#      auto-commit: true #OrderManagerService 代码异常，spring自动回滚，或者手动回滚。否则正常自动提交
-#      idle-timeout: 60000
-#      #pool-name: HikariCP-Demo
-#      max-lifetime: 1800000
-#      connection-timeout: 600000
-#      #connection-test-query: SELECT 1
-#
-#  redis:
-#    ##单机
-#    #  数据库索引
-#    database: 0
-#
-#    #    单机
-#    # 远程服务器地址
-#    host: 127.0.0.1
-#    # 远程服务器端口
-#    port: 6379
-#
-#
-#    #    #配置集群，自动写入集群
-#    #    ##集群 注意：密码用上面密码配置 127.0.0.1:7001,127.0.0.1:7002,127.0.0.1:7003,127.0.0.1:7004,127.0.0.1:7005,127.0.0.1:7006 #集群节点
-#    #    cluster:
-#    #      nodes:
-#    #        - 127.0.0.1:7000
-#    #        - 127.0.0.1:7001
-#    #        - 127.0.0.1:7002
-#    #        - 127.0.0.1:7003
-#    #        - 127.0.0.1:7004
-#    #        - 127.0.0.1:7005
-#    #      max-redirects: 3
-#
-#
-#    # 集群配置也用此处写正确的密码
-#    password: fancky123456
-#    # 链接超时时间（毫秒）
-#    timeout: 30000
-#
-#    #redis连接池 lettuce、jedis。连接池 单机配置。默认集成lettuce
-#    #    jedis:
-#    lettuce:
-#      pool:
-#        # 最大空闲连接
-#        max-idle: 64
-#        # 最小空闲链接
-#        min-idle: 0
-#        # 最大连接数（负数表示没有限制）
-#        max-active: 64
-#        # 最大阻塞等待时间（负数表示没有限制）
-#        max-wait: 0
-#
-#
-#    #    ##集群 注意：密码用上面密码配置
-#    #    cluster:
-#    #      nodes:
-#    #        - 127.0.0.1:7000
-#    #        - 127.0.0.1:7001
-#    #        - 127.0.0.1:7002
-#    #        - 127.0.0.1:7003
-#    #        - 127.0.0.1:7004
-#    #      max-redirects: 3
-#
-#    #    ##哨兵 密码用上面密码配置
-#    #    sentinel:
-#    #      master: mymaster
-#    #      nodes:
-#    #        - 127.0.0.1:60001
-#    #        - 127.0.0.1:60002
-#    #        - 127.0.0.1:60003
-#
-#
-#    #springboot 配置未成功，参见代码的配置
-#    redisson:
-#      file: classpath:redisson-config.yml
-##springboot 监控 Actuator
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: '*'
+server:
+  port: 8211
+spring:
+  application:
+    name: service-provider-one  #nacos将服务服务注册中心，默认采用应用程序名称。如果两个服务名称一样，网关会采用负载均衡。默认轮训
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  datasource:
+    #mysql
+    #具体参见类DynamicDataSourceAspect 说明
+    #不用此默认，默认就是写库,多数据源用jdbcUrl，不是url,spring 默认用的是url，用多数据源用url会报错。
+    url: jdbc:mysql://127.0.0.1:3306/demo?useUnicode=true&characterEncoding=utf8&useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&allowMultiQueries=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+
+    # HikariCP： springboot2.0 默认的连接池。https://github.com/brettwooldridge/HikariCP
+    #HikariCP  高并发性能优。mysql 8h 空闲断开连接可用quartz 调度定期select 1  。
+    #产生此问题DB工作就不繁忙，性能要求不高。可以用上面dbcp2的配置，采取空闲查询策略。
+    #要引入mybatis
+    type: com.zaxxer.hikari.HikariDataSource
+    # Hikari will use the above plus the following to setup connection pooling
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 100
+      auto-commit: true #OrderManagerService 代码异常，spring自动回滚，或者手动回滚。否则正常自动提交
+      idle-timeout: 60000
+      #pool-name: HikariCP-Demo
+      max-lifetime: 1800000
+      connection-timeout: 600000
+      #connection-test-query: SELECT 1
+
+  redis:
+    ##单机
+    #  数据库索引
+    database: 0
+
+    #    单机
+    # 远程服务器地址
+    host: 127.0.0.1
+    # 远程服务器端口
+    port: 6379
+
+
+    #    #配置集群，自动写入集群
+    #    ##集群 注意：密码用上面密码配置 127.0.0.1:7001,127.0.0.1:7002,127.0.0.1:7003,127.0.0.1:7004,127.0.0.1:7005,127.0.0.1:7006 #集群节点
+    #    cluster:
+    #      nodes:
+    #        - 127.0.0.1:7000
+    #        - 127.0.0.1:7001
+    #        - 127.0.0.1:7002
+    #        - 127.0.0.1:7003
+    #        - 127.0.0.1:7004
+    #        - 127.0.0.1:7005
+    #      max-redirects: 3
+
+
+    # 集群配置也用此处写正确的密码
+    password: fancky123456
+    # 链接超时时间（毫秒）
+    timeout: 30000
+
+    #redis连接池 lettuce、jedis。连接池 单机配置。默认集成lettuce
+    #    jedis:
+    lettuce:
+      pool:
+        # 最大空闲连接
+        max-idle: 64
+        # 最小空闲链接
+        min-idle: 0
+        # 最大连接数（负数表示没有限制）
+        max-active: 64
+        # 最大阻塞等待时间（负数表示没有限制）
+        max-wait: 0
+
+
+    #    ##集群 注意：密码用上面密码配置
+    #    cluster:
+    #      nodes:
+    #        - 127.0.0.1:7000
+    #        - 127.0.0.1:7001
+    #        - 127.0.0.1:7002
+    #        - 127.0.0.1:7003
+    #        - 127.0.0.1:7004
+    #      max-redirects: 3
+
+    #    ##哨兵 密码用上面密码配置
+    #    sentinel:
+    #      master: mymaster
+    #      nodes:
+    #        - 127.0.0.1:60001
+    #        - 127.0.0.1:60002
+    #        - 127.0.0.1:60003
+
+
+    #springboot 配置未成功，参见代码的配置
+    redisson:
+      file: classpath:redisson-config.yml
+
+
+  rabbitmq:
+    ##集群配置 ip:port,ip:port 。多个配置之间用逗号隔开
+    # addresses: 127.0.0.1:5673,127.0.0.1:5674,127.0.0.1:5675 #指定client连接到的server的地址，多个以逗号分隔(优先取addresses，然后再取host)
+
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    #发布确认 publisher-confirms已经修改为publisher-confirm-type，
+    #publisher-confirms: true
+    publisher-confirm-type: CORRELATED
+    # 开启发送失败退回
+    publisher-returns: true
+    template:
+      #设置为 true 后 消费者在消息没有被路由到合适队列情况下会被return监听，而不会自动删除
+      mandatory: true
+    virtual-host: /
+    #开启手动Axk,手动无法自动加入死信队列，可以重试指定次数。
+    #设置成默认的自动Ack,springboot会加入死信队列，一定设置死信队列。
+    #    listener.simple.acknowledge-mode: manual
+    listener:
+      #全局SimpleRabbitListenerContainerFactory 配置
+      simple:
+        retry:
+          #是否开启消费者重试（为false时关闭消费者重试，这时消费端代码异常会一直重复收到消息）
+          #默认false ,不采用spring自带的重试，自己设计死信队列达到重试次数入库
+          enabled: false
+          #最大重试次数（包括执行一次，实际重试两次。1+2=3），达到重试次数不再消费，
+          #不能在代码中吞噬异常否则无法重试，类似数据库事务
+          max-attempts: 3
+          #重试间隔时间（单位毫秒）
+          initial-interval: 2000
+        #公平分发模式 默认是1
+        prefetch: 30
+        #默认 auto，不然消费异常业务ack掉。尽管配置重新入队auto还是会重试入队之后ack掉
+        acknowledge-mode: manual
+        #消费异常的数据重新入队。
+    #        default-requeue-rejected: true
+
+    #    listener:
+    #      direct:
+    #        acknowledge-mode: manual
+    #        #默认是1
+    #        prefetch: 1
+#springboot 监控 Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
