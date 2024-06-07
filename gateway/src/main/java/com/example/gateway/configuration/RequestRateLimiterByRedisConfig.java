@@ -30,7 +30,7 @@ public class RequestRateLimiterByRedisConfig {
 
 
 
-    /*
+    /**
     根据用户IP限流
      */
     @Bean(value = "ipKeyResolver")
@@ -39,7 +39,7 @@ public class RequestRateLimiterByRedisConfig {
         return exchange -> reactor.core.publisher.Mono.just(exchange.getRequest().getRemoteAddress().getAddress().getHostAddress());
     }
 
-    /*
+    /**
     根据用户限流
      */
     @Bean(value = "userKeyResolver")
@@ -47,7 +47,7 @@ public class RequestRateLimiterByRedisConfig {
         return exchange -> Mono.just(exchange.getRequest().getQueryParams().getFirst("userId"));
     }
 
-    /*
+    /**
     根据后端接口限流
      */
     @Bean(value = "pathKeyResolver")

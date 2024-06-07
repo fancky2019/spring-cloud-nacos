@@ -62,10 +62,24 @@
 		</dependency>
 
 
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-sentinel &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>com.alibaba.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>-->
+<!--			<version>2022.0.0.0</version>-->
+<!--		</dependency>-->
 
 
+<!--	resilience4j：	hystrix 不在维护-->
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-circuitbreaker-resilience4j -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+			<version>3.1.1</version>
+		</dependency>
 
-<!--		&lt;!&ndash;        log4j2配置&ndash;&gt;-->
+
+		<!--		&lt;!&ndash;        log4j2配置&ndash;&gt;-->
 <!--		<dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-starter</artifactId>-->

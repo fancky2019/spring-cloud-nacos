@@ -1,0 +1,127 @@
+2024-02-01 11:07:48 -[main] - [] -[INFO ]- [c.a.n.c.c.i.LocalConfigInfoProcessor] - LOCAL_SNAPSHOT_PATH:C:\Users\lirui\nacos\config
+2024-02-01 11:07:48 -[main] - [] -[INFO ]- [c.a.n.c.c.i.Limiter] - limitTime:5.0
+2024-02-01 11:07:49 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:07:50 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:07:51 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:07:51 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - no available server
+2024-02-01 11:07:51 -[main] - [] -[ERROR]- [c.a.n.c.c.i.ClientWorker] - [fixed-127.0.0.1_8848] [sub-server] get server config exception, dataId=service-provider-two, group=DEFAULT_GROUP, tenant=
+java.net.ConnectException: no available server
+	at com.alibaba.nacos.client.config.http.ServerHttpAgent.httpGet(ServerHttpAgent.java:134)
+	at com.alibaba.nacos.client.config.http.MetricsHttpAgent.httpGet(MetricsHttpAgent.java:51)
+	at com.alibaba.nacos.client.config.impl.ClientWorker.getServerConfig(ClientWorker.java:274)
+	at com.alibaba.nacos.client.config.NacosConfigService.getConfigInner(NacosConfigService.java:155)
+	at com.alibaba.nacos.client.config.NacosConfigService.getConfig(NacosConfigService.java:98)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder.loadNacosData(NacosPropertySourceBuilder.java:85)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder.build(NacosPropertySourceBuilder.java:73)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadNacosPropertySource(NacosPropertySourceLocator.java:199)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadNacosDataIfPresent(NacosPropertySourceLocator.java:186)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadApplicationConfiguration(NacosPropertySourceLocator.java:141)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.locate(NacosPropertySourceLocator.java:103)
+	at org.springframework.cloud.bootstrap.config.PropertySourceLocator.locateCollection(PropertySourceLocator.java:51)
+	at org.springframework.cloud.bootstrap.config.PropertySourceLocator.locateCollection(PropertySourceLocator.java:47)
+	at org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration.doInitialize(PropertySourceBootstrapConfiguration.java:120)
+	at org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration.initialize(PropertySourceBootstrapConfiguration.java:110)
+	at org.springframework.boot.SpringApplication.applyInitializers(SpringApplication.java:605)
+	at org.springframework.boot.SpringApplication.prepareContext(SpringApplication.java:374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at com.example.serviceprovidertwo.ServiceProviderTwoApplication.main(ServiceProviderTwoApplication.java:19)
+2024-02-01 11:07:51 -[main] - [] -[WARN ]- [c.a.n.c.c.NacosConfigService] - [fixed-127.0.0.1_8848] [get-config] get from server error, dataId=service-provider-two, group=DEFAULT_GROUP, tenant=, msg=ErrCode:500, ErrMsg:no available server
+2024-02-01 11:07:51 -[main] - [] -[WARN ]- [c.a.n.c.c.NacosConfigService] - [fixed-127.0.0.1_8848] [get-config] get snapshot ok, dataId=service-provider-two, group=DEFAULT_GROUP, tenant=, config=
+2024-02-01 11:07:51 -[main] - [] -[WARN ]- [c.a.c.n.c.NacosPropertySourceBuilder] - Ignore the empty nacos configuration and get it based on dataId[service-provider-two] & group[DEFAULT_GROUP]
+2024-02-01 11:07:51 -[Thread-4] - [] -[WARN ]- [c.a.n.c.h.HttpClientBeanHolder] - [HttpClientBeanHolder] Start destroying common HttpClient
+2024-02-01 11:07:51 -[Thread-4] - [] -[WARN ]- [c.a.n.c.h.HttpClientBeanHolder] - [HttpClientBeanHolder] Destruction of the end
+2024-02-01 11:29:30 -[main] - [] -[INFO ]- [c.a.n.c.c.i.LocalConfigInfoProcessor] - LOCAL_SNAPSHOT_PATH:C:\Users\lirui\nacos\config
+2024-02-01 11:29:30 -[main] - [] -[INFO ]- [c.a.n.c.c.i.Limiter] - limitTime:5.0
+2024-02-01 11:29:32 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:33 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:34 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:34 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - no available server
+2024-02-01 11:29:34 -[main] - [] -[ERROR]- [c.a.n.c.c.i.ClientWorker] - [fixed-127.0.0.1_8848] [sub-server] get server config exception, dataId=service-provider-two, group=DEFAULT_GROUP, tenant=
+java.net.ConnectException: no available server
+	at com.alibaba.nacos.client.config.http.ServerHttpAgent.httpGet(ServerHttpAgent.java:134)
+	at com.alibaba.nacos.client.config.http.MetricsHttpAgent.httpGet(MetricsHttpAgent.java:51)
+	at com.alibaba.nacos.client.config.impl.ClientWorker.getServerConfig(ClientWorker.java:274)
+	at com.alibaba.nacos.client.config.NacosConfigService.getConfigInner(NacosConfigService.java:155)
+	at com.alibaba.nacos.client.config.NacosConfigService.getConfig(NacosConfigService.java:98)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder.loadNacosData(NacosPropertySourceBuilder.java:85)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder.build(NacosPropertySourceBuilder.java:73)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadNacosPropertySource(NacosPropertySourceLocator.java:199)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadNacosDataIfPresent(NacosPropertySourceLocator.java:186)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadApplicationConfiguration(NacosPropertySourceLocator.java:141)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.locate(NacosPropertySourceLocator.java:103)
+	at org.springframework.cloud.bootstrap.config.PropertySourceLocator.locateCollection(PropertySourceLocator.java:51)
+	at org.springframework.cloud.bootstrap.config.PropertySourceLocator.locateCollection(PropertySourceLocator.java:47)
+	at org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration.doInitialize(PropertySourceBootstrapConfiguration.java:120)
+	at org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration.initialize(PropertySourceBootstrapConfiguration.java:110)
+	at org.springframework.boot.SpringApplication.applyInitializers(SpringApplication.java:605)
+	at org.springframework.boot.SpringApplication.prepareContext(SpringApplication.java:374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at com.example.serviceprovidertwo.ServiceProviderTwoApplication.main(ServiceProviderTwoApplication.java:19)
+2024-02-01 11:29:34 -[main] - [] -[WARN ]- [c.a.n.c.c.NacosConfigService] - [fixed-127.0.0.1_8848] [get-config] get from server error, dataId=service-provider-two, group=DEFAULT_GROUP, tenant=, msg=ErrCode:500, ErrMsg:no available server
+2024-02-01 11:29:34 -[main] - [] -[WARN ]- [c.a.n.c.c.NacosConfigService] - [fixed-127.0.0.1_8848] [get-config] get snapshot ok, dataId=service-provider-two, group=DEFAULT_GROUP, tenant=, config=
+2024-02-01 11:29:34 -[main] - [] -[WARN ]- [c.a.c.n.c.NacosPropertySourceBuilder] - Ignore the empty nacos configuration and get it based on dataId[service-provider-two] & group[DEFAULT_GROUP]
+2024-02-01 11:29:35 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:36 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:37 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:37 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - no available server
+2024-02-01 11:29:37 -[main] - [] -[ERROR]- [c.a.n.c.c.i.ClientWorker] - [fixed-127.0.0.1_8848] [sub-server] get server config exception, dataId=service-provider-two.yaml, group=DEFAULT_GROUP, tenant=
+java.net.ConnectException: no available server
+	at com.alibaba.nacos.client.config.http.ServerHttpAgent.httpGet(ServerHttpAgent.java:134)
+	at com.alibaba.nacos.client.config.http.MetricsHttpAgent.httpGet(MetricsHttpAgent.java:51)
+	at com.alibaba.nacos.client.config.impl.ClientWorker.getServerConfig(ClientWorker.java:274)
+	at com.alibaba.nacos.client.config.NacosConfigService.getConfigInner(NacosConfigService.java:155)
+	at com.alibaba.nacos.client.config.NacosConfigService.getConfig(NacosConfigService.java:98)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder.loadNacosData(NacosPropertySourceBuilder.java:85)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder.build(NacosPropertySourceBuilder.java:73)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadNacosPropertySource(NacosPropertySourceLocator.java:199)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadNacosDataIfPresent(NacosPropertySourceLocator.java:186)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadApplicationConfiguration(NacosPropertySourceLocator.java:144)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.locate(NacosPropertySourceLocator.java:103)
+	at org.springframework.cloud.bootstrap.config.PropertySourceLocator.locateCollection(PropertySourceLocator.java:51)
+	at org.springframework.cloud.bootstrap.config.PropertySourceLocator.locateCollection(PropertySourceLocator.java:47)
+	at org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration.doInitialize(PropertySourceBootstrapConfiguration.java:120)
+	at org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration.initialize(PropertySourceBootstrapConfiguration.java:110)
+	at org.springframework.boot.SpringApplication.applyInitializers(SpringApplication.java:605)
+	at org.springframework.boot.SpringApplication.prepareContext(SpringApplication.java:374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at com.example.serviceprovidertwo.ServiceProviderTwoApplication.main(ServiceProviderTwoApplication.java:19)
+2024-02-01 11:29:37 -[main] - [] -[WARN ]- [c.a.n.c.c.NacosConfigService] - [fixed-127.0.0.1_8848] [get-config] get from server error, dataId=service-provider-two.yaml, group=DEFAULT_GROUP, tenant=, msg=ErrCode:500, ErrMsg:no available server
+2024-02-01 11:29:37 -[main] - [] -[WARN ]- [c.a.n.c.c.NacosConfigService] - [fixed-127.0.0.1_8848] [get-config] get snapshot ok, dataId=service-provider-two.yaml, group=DEFAULT_GROUP, tenant=, config=
+2024-02-01 11:29:37 -[main] - [] -[WARN ]- [c.a.c.n.c.NacosPropertySourceBuilder] - Ignore the empty nacos configuration and get it based on dataId[service-provider-two.yaml] & group[DEFAULT_GROUP]
+2024-02-01 11:29:38 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:39 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:40 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - [NACOS SocketTimeoutException httpGet] currentServerAddr:http://127.0.0.1:8848， err : connect timed out
+2024-02-01 11:29:40 -[main] - [] -[ERROR]- [c.a.n.c.c.h.ServerHttpAgent] - no available server
+2024-02-01 11:29:40 -[main] - [] -[ERROR]- [c.a.n.c.c.i.ClientWorker] - [fixed-127.0.0.1_8848] [sub-server] get server config exception, dataId=service-provider-two-test.yaml, group=DEFAULT_GROUP, tenant=
+java.net.ConnectException: no available server
+	at com.alibaba.nacos.client.config.http.ServerHttpAgent.httpGet(ServerHttpAgent.java:134)
+	at com.alibaba.nacos.client.config.http.MetricsHttpAgent.httpGet(MetricsHttpAgent.java:51)
+	at com.alibaba.nacos.client.config.impl.ClientWorker.getServerConfig(ClientWorker.java:274)
+	at com.alibaba.nacos.client.config.NacosConfigService.getConfigInner(NacosConfigService.java:155)
+	at com.alibaba.nacos.client.config.NacosConfigService.getConfig(NacosConfigService.java:98)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder.loadNacosData(NacosPropertySourceBuilder.java:85)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder.build(NacosPropertySourceBuilder.java:73)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadNacosPropertySource(NacosPropertySourceLocator.java:199)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadNacosDataIfPresent(NacosPropertySourceLocator.java:186)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.loadApplicationConfiguration(NacosPropertySourceLocator.java:149)
+	at com.alibaba.cloud.nacos.client.NacosPropertySourceLocator.locate(NacosPropertySourceLocator.java:103)
+	at org.springframework.cloud.bootstrap.config.PropertySourceLocator.locateCollection(PropertySourceLocator.java:51)
+	at org.springframework.cloud.bootstrap.config.PropertySourceLocator.locateCollection(PropertySourceLocator.java:47)
+	at org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration.doInitialize(PropertySourceBootstrapConfiguration.java:120)
+	at org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration.initialize(PropertySourceBootstrapConfiguration.java:110)
+	at org.springframework.boot.SpringApplication.applyInitializers(SpringApplication.java:605)
+	at org.springframework.boot.SpringApplication.prepareContext(SpringApplication.java:374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at com.example.serviceprovidertwo.ServiceProviderTwoApplication.main(ServiceProviderTwoApplication.java:19)
+2024-02-01 11:29:40 -[main] - [] -[WARN ]- [c.a.n.c.c.NacosConfigService] - [fixed-127.0.0.1_8848] [get-config] get from server error, dataId=service-provider-two-test.yaml, group=DEFAULT_GROUP, tenant=, msg=ErrCode:500, ErrMsg:no available server
+2024-02-01 11:29:40 -[main] - [] -[WARN ]- [c.a.n.c.c.NacosConfigService] - [fixed-127.0.0.1_8848] [get-config] get snapshot ok, dataId=service-provider-two-test.yaml, group=DEFAULT_GROUP, tenant=, config=
+2024-02-01 11:29:40 -[main] - [] -[INFO ]- [c.a.n.c.c.u.JvmUtil] - isMultiInstance:false
+2024-02-01 11:29:40 -[main] - [] -[INFO ]- [o.s.c.b.c.PropertySourceBootstrapConfiguration] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-service-provider-two-test.yaml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-service-provider-two.yaml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-service-provider-two,DEFAULT_GROUP'}]

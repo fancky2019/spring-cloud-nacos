@@ -8,9 +8,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.cloud.sleuth.TraceContext;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Slf4j
@@ -22,7 +25,8 @@ public class TestController {
     private static Logger logger = LogManager.getLogger(TestController.class);
 
 //    private final RestTemplate restTemplate;
-
+@Autowired
+private HttpServletRequest httpServletRequest;
     @Autowired
     private TestOpenFeignService testOpenFeignService;
 
@@ -39,6 +43,10 @@ public class TestController {
 
     @GetMapping("/helloWorld")
     public String helloWorld(String hello) throws Exception {
+
+        // HttpServletRequest request
+        TraceContext traceContext = (TraceContext) httpServletRequest.getAttribute(TraceContext.class.getName());
+        String traceId =  traceContext.traceId();
 
         log.info("链路跟踪测试{}",hello);
         logger.info("hello="+hello);

@@ -5,8 +5,10 @@ import com.example.serviceproviderone.rabbitMQ.BaseRabbitMqHandler;
 import com.example.serviceproviderone.rabbitMQ.RabbitMQConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
+@Slf4j
 //@RabbitListener(queues = "DirectExchangeQueueSpringBoot")//参数为队列名称
 public class DirectExchangeConsumer extends BaseRabbitMqHandler {
     @Autowired
@@ -143,11 +146,15 @@ public class DirectExchangeConsumer extends BaseRabbitMqHandler {
         try {
 //            Thread.sleep(10000);
             String receivedMessage = new String(message.getBody());
+//            sleuth 可以打印出rabbitmq 中的消息
 //            RabbitMqMessage rabbitMqMessage = this.objectMapper.readValue(receivedMessage, RabbitMqMessage.class);
 //            Person person = objectMapper.readValue(rabbitMqMessage.getContent(), Person.class);
-
+            log.info("sleuth1:"+receivedMessage);
+//            MDC.put("traceId", receivedMessage);
+            log.info("sleuth2:"+receivedMessage);
             //logger.info("threadId - " + Thread.currentThread().getId() + " receivedMsg: " + person.getId());
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+//            MDC.clear();
         } catch (Exception e) {
 
 

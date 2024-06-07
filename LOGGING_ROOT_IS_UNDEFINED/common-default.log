@@ -1,0 +1,6 @@
+2024-02-02 08:50:50 -[main] - [] -[INFO ]- [c.a.n.c.c.i.LocalConfigInfoProcessor] - LOCAL_SNAPSHOT_PATH:C:\Users\lirui\nacos\config
+2024-02-02 08:50:50 -[main] - [] -[INFO ]- [c.a.n.c.c.i.Limiter] - limitTime:5.0
+2024-02-02 08:50:50 -[main] - [] -[WARN ]- [c.a.c.n.c.NacosPropertySourceBuilder] - Ignore the empty nacos configuration and get it based on dataId[service-provider-two] & group[DEFAULT_GROUP]
+2024-02-02 08:50:50 -[main] - [] -[WARN ]- [c.a.c.n.c.NacosPropertySourceBuilder] - Ignore the empty nacos configuration and get it based on dataId[service-provider-two.yaml] & group[DEFAULT_GROUP]
+2024-02-02 08:50:50 -[main] - [] -[INFO ]- [c.a.n.c.c.u.JvmUtil] - isMultiInstance:false
+2024-02-02 08:50:50 -[main] - [] -[INFO ]- [o.s.c.b.c.PropertySourceBootstrapConfiguration] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-service-provider-two-test.yaml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-service-provider-two.yaml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-service-provider-two,DEFAULT_GROUP'}]
