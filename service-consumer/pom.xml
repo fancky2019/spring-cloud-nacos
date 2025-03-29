@@ -78,6 +78,11 @@
 			<version>3.1.1</version>
 		</dependency>
 
+		<!--RabbitMQ依赖-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
 
 		<!--		&lt;!&ndash;        log4j2配置&ndash;&gt;-->
 <!--		<dependency>-->

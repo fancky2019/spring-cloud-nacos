@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import reactor.core.publisher.Mono;
 
-/*
+/**
 Redis 限流：别忘记启动Redis
  */
 @Configuration

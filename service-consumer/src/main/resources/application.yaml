@@ -197,4 +197,9 @@ resilience4j:
 logging:
   config: classpath:log4j2.xml
 
+sbp:
+  ordermigratedbtoolurl: http://localhost:8101
+  ESCertPath: D:\work\dev\ES\elk\elasticsearch-8.8.2\config\certs\http_ca.crt
+  wmsurl: http://localhost:9000/api/app
+
 

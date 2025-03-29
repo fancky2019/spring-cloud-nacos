@@ -86,6 +86,11 @@
         			<version>${redisson.version}</version>
         		</dependency>
 
+        <!--RabbitMQ依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.fancky</groupId>

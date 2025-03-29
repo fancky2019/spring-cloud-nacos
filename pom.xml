@@ -56,7 +56,6 @@
 		<redisson.version>3.25.2</redisson.version>
 		<mybatis-plus.version>3.5.6</mybatis-plus.version>
 		<mysql-connector.version>8.0.33</mysql-connector.version>
-		<pagehelper.version>2.1.0</pagehelper.version>
 		<easyexcel.version>3.3.4</easyexcel.version>
 		<xxl-job.version>2.4.1</xxl-job.version>
 
@@ -162,11 +161,7 @@
 <!--		</dependency>-->
 
 
-		<!--RabbitMQ依赖-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-amqp</artifactId>
-		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>

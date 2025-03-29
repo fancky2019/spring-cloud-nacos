@@ -2,10 +2,7 @@ package com.example.serviceconsumer.service;
 
 import com.example.serviceconsumer.model.Student;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /*
     参见SpringCloud 项目
@@ -38,6 +35,8 @@ public interface TestOpenFeignService {
 //    @PostMapping("/test/addUser1")
 //    String addUser1(@RequestBody @Validated UserInfo request, @RequestHeader("token") String token);
 
+//@GetMapping("/users/{id}")
+//ResponseEntity<User> getUserById(@PathVariable Long id);
 
 
 }

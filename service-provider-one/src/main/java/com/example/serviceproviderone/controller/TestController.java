@@ -1,5 +1,6 @@
 package com.example.serviceproviderone.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.inner.DataChangeRecorderInnerInterceptor;
 import com.example.serviceproviderone.model.MqMessage;
 import com.example.serviceproviderone.model.Student;
 import com.example.serviceproviderone.rabbitMQ.RabbitMQConfig;
@@ -31,6 +32,26 @@ public class TestController {
     @Autowired
     private DirectExchangeProducer directExchangeProducer;
 
+
+
+
+    /**
+     * sleuth 实现了traceId spanId,nacos 、consumer、provider 内部的
+     * 每个服务 traceId 一样 。服务间spanId 不一样。
+     * sleuth 不会在xxl-job中生成traceId 和spanId
+     *
+     *
+     *
+     * Trace ID是调用链的全局唯一标识符.每个服务一个spanId
+     * 发生熔断之后，调用方不会收到服务方的返回消息
+     *
+     *
+     *
+     *
+     * @param hello
+     * @return
+     * @throws InterruptedException
+     */
     @GetMapping("/helloWorld")
     public String helloWorld(String hello) throws InterruptedException {
         log.info("链路跟踪测试{}",hello);
@@ -55,6 +76,7 @@ public class TestController {
     {
         TraceContext traceContext = (TraceContext) httpServletRequest.getAttribute(TraceContext.class.getName());
         String traceId =  traceContext.traceId();
+        String spanId = traceContext.spanId();
         log.info("1链路跟踪测试{}",traceId);
         MqMessage mqMessage = new MqMessage
                 (RabbitMQConfig.BATCH_DIRECT_EXCHANGE_NAME,

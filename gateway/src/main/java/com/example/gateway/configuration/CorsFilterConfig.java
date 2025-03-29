@@ -20,7 +20,7 @@ from origin 'http://localhost:63342' has been blocked by CORS policy: The 'Acces
  'http://localhost:63342, http://localhost:63342', but only one is allowed.
  */
 
-/*
+/**
 CorsWebFilter
  */
 @Configuration
